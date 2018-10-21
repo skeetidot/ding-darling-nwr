@@ -1,0 +1,208 @@
+/*******************************************************************/
+
+/* CSS TO STYLE THE WHOLE PAGE */
+
+html,
+body,
+#map {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    font-family: "Roboto", "Open Sans", sans-serif;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+#map {
+    z-index: 5;
+}
+
+
+/* BROWSER ADDS MARGIN BY DEFAULT. THIS GETS RID OF SCROLLBAR */
+
+body {
+    margin: 0;
+}
+
+p {
+    font-size: 1.1em;
+}
+
+
+/**********************************************************************/
+
+/* CSS FOR THE UI CONTROLS */
+
+#ui-controls {
+    padding-top: 0px;
+}
+
+#ui-controls #fieldLabel {
+    font-size: 1.25em;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+#ui-controls input {
+    margin-bottom: 5px;
+}
+
+#ui-controls input[type="button"], input[type="submit"] {
+    font-size: 1.1em;
+    margin-right: 5px;
+}
+
+
+/**********************************************************************/
+
+/* CSS FOR THE REGRESSION EQUATION AND R-SQUARED LABELS */
+
+#regressionEquationLabel {
+    font-size: 1.25em;
+    font-weight: bold;
+    margin-top: 10px; 
+}
+
+#rSquaredLabel {
+    font-size: 1.25em;
+    font-weight: bold;
+    margin-top: 10px;   
+}
+
+
+/************************************************************/
+
+/* CSS RELATED TO THE LEGEND */
+
+.legend {
+    padding: 6px 8px;
+    font-size: 1em;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    border: 1.3px solid rgba(96, 96, 96, .6);
+}
+
+.legend h3 {
+    font-size: 1.25em;
+    font-weight: normal;
+    color: #001323;
+    margin-top: 0px;
+    margin-bottom: 7px;
+}
+
+.legend span {
+    width: 20px;
+    height: 20px;
+    float: left;
+    margin: 0 10px 4px 0;
+}
+
+.legend label {
+    font-size: 1.1em;
+}
+
+.legend label:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+
+/**********************************************************************/
+
+/* CSS FOR LEAFLET */
+
+/* Leaflet top controls */
+
+.leaflet-top {
+    position: absolute;
+    /*    margin-top: 7.2em;*/
+    /* If there is a header, this pushes all the leaflet controls down */
+    z-index: 1000;
+}
+
+.leaflet-touch .leaflet-control-layers {
+    width: 200px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);    
+}
+
+.leaflet-top .leaflet-left .leaflet-control-zoom {
+    display: none;
+}
+
+
+.leaflet-left {
+    width: 320px;
+}
+
+.leaflet-top {
+    height: 800px;
+    bottom: 0;
+}
+
+.leaflet-control-layers {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 0 2px 2px #707070;
+    font-size: 1.4em;
+    font-weight: bold;
+    right: 0.25em;
+}
+
+.leaflet-control-layers-expanded {
+    background-color: rgba(255, 255, 255, 1);
+    border-bottom-color: rgba (255, 255, 255, 1);
+    right: 0.25em;
+}
+
+.leaflet-touch .leaflet-control-layers {
+    border: 1.3px solid rgba(96, 96, 96, .6)
+}
+
+.leaflet-touch .leaflet-bar {
+    border: 1.3px solid rgba(96, 96, 96, .6);
+}
+
+
+
+/**********************************************************************/
+
+/* CSS FOR THE POPUPS */
+
+.custom-popup .leaflet-popup-content-wrapper {
+    color: white;
+    border-radius: 8px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    width: 350px;
+    max-height: 300px;
+    overflow-x: auto;
+    overflow-y: none;
+}
+
+
+.custom-popup .leaflet-popup-content-wrapper::-webkit-scrollbar {
+    width: 5px;
+    opacity: .75;
+}
+
+
+.custom-popup .leaflet-popup-content-wrapper::-webkit-scrollbar-track {
+    background: #ddd;
+    opacity: .75;
+}
+
+
+.custom-popup .leaflet-popup-content-wrapper::-webkit-scrollbar-thumb {
+    background: #666;
+    opacity: .75;
+    border-radius: 3px;
+}
+
+
+.custom-popup .leaflet-popup-content {
+    margin: 1em;
+    width: 400px;
+}
