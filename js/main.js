@@ -116,12 +116,12 @@ map.addLayer(Wikimedia);
 
 // Run the load data functions automatically when document loads
 $(document).ready(function () {
-    loadParkingLots();
     loadRoads();
     loadTrails();
     loadTrailFeatures();
     loadVisitorServiceFeatures();
     loadeBirdHotspots();
+    loadParkingLots();    
     loadRefugeBoundary();    
 });
 
@@ -148,8 +148,8 @@ function loadRefugeBoundary() {
             style: function (feature) {
                 return {
                     color: '#5c8944', // set stroke color
-                    weight: 1, // set stroke weight
-                    opacity: 0.7, // set stroke opacity
+                    weight: 1.5, // set stroke weight
+                    opacity: 1, // set stroke opacity
                     fillOpacity: 0.25, // override default fill opacity
                     fillColor: '#bbe1a4' // set fill color
                 };
@@ -199,6 +199,9 @@ function loadParkingLots() {
             }               
 
         }).addTo(map);
+        
+        // Bring the layer to the back of the layer order
+        parkingLots.bringToBack();
     });
 };
 
@@ -268,17 +271,19 @@ function loadTrails() {
                     color: '#e60000', // set stroke color
                     weight: 1.5, // set stroke weight
                     opacity: 1, // set stroke opacity
-                    dashArray: '5, 5', // set the dashed line pattern
-                    lineJoin: 'miter' // set the line join type
+                    dashArray: '5, 5' // set the dashed line pattern
+                    //lineJoin: 'miter' // set the line join type
                     // Line Join Types: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-linejoin
                 };
             },
             
             // Loop through each feature
             onEachFeature: function (feature, layer) {
+                
+                var length = parseFloat(feature.properties.sec_length).toFixed(2).toLocaleString()
 
                 // Bind the nameto a popup
-                layer.bindPopup(feature.properties.name);
+                layer.bindPopup(feature.properties.name + " (" + length + " mi)");
 
             }               
 
