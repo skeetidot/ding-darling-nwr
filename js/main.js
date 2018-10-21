@@ -20,7 +20,6 @@ var Wikimedia = L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.
 var roadsLayerGroup = L.layerGroup(),
     trailsLayerGroup = L.layerGroup(),
     trailFeaturesLayerGroup = L.layerGroup(),
-    parkingLotsLayerGroup = L.layerGroup(),
     visitorServiceFeaturesLayerGroup = L.layerGroup(),
     eBirdHotspotsLayerGroup = L.layerGroup();
 
@@ -82,7 +81,6 @@ var overlays = {
     "Roads": roadsLayerGroup,
     "Trails": trailsLayerGroup,
     "Trail Features": trailFeaturesLayerGroup,
-    "Parking Lots": parkingLotsLayerGroup,
     "Points of Interest": visitorServiceFeaturesLayerGroup,
     "eBird Hotspots": eBirdHotspotsLayerGroup
 };
@@ -96,7 +94,7 @@ var mapOptions = {
     maxZoom: 19,
     maxBounds: L.latLngBounds([26.586689, -82.259155], [26.398794, -81.867178]), // panning bounds so the user doesn't pan too far away from the refuge
     bounceAtZoomLimits: false, // Set it to false if you don't want the map to zoom beyond min/max zoom and then bounce back when pinch-zooming
-    layers: [Wikimedia, roadsLayerGroup, trailsLayerGroup, trailFeaturesLayerGroup, parkingLotsLayerGroup, visitorServiceFeaturesLayerGroup, eBirdHotspotsLayerGroup] // Set the layers to build into the layer control
+    layers: [Wikimedia, roadsLayerGroup, trailsLayerGroup, trailFeaturesLayerGroup, visitorServiceFeaturesLayerGroup, eBirdHotspotsLayerGroup] // Set the layers to build into the layer control
 };
 
 
@@ -199,7 +197,7 @@ function loadParkingLots() {
 
             }               
 
-        }).addTo(parkingLotsLayerGroup);
+        }).addTo(map);
     });
 };
 
@@ -223,9 +221,9 @@ function loadRoads() {
             // Create an initial style for each feature
             style: function (feature) {
                 return {
-                    color: '#ffffff', // set stroke color
+                    color: '#9e559c', // set stroke color
                     weight: 2.5, // set stroke weight
-                    opacity: .5 // set stroke opacity
+                    opacity: 1 // set stroke opacity
                 };
             },
             
@@ -401,5 +399,7 @@ function loadeBirdHotspots() {
             }               
 
         }).addTo(eBirdHotspotsLayerGroup);
+        
+        map.removeLayer(eBirdHotspotsLayerGroup);
     });
 };
