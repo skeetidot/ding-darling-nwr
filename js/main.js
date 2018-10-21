@@ -17,11 +17,9 @@ var Wikimedia = L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.
 
 
 // Initialize global variables for the layer groups that will be included in the layer list
-var roadsLayerGroup = L.layerGroup(),
-    trailsLayerGroup = L.layerGroup(),
-    trailFeaturesLayerGroup = L.layerGroup(),
-    visitorServiceFeaturesLayerGroup = L.layerGroup(),
-    eBirdHotspotsLayerGroup = L.layerGroup();
+var trailFeaturesLayerGroup = L.featureGroup(),
+    visitorServiceFeaturesLayerGroup = L.featureGroup(),
+    eBirdHotspotsLayerGroup = L.featureGroup();
 
 
 // Initialize global variables for data layers
@@ -78,8 +76,6 @@ var baseMaps = {
 
 // Set the overlays to include in the layer list
 var overlays = {
-    "Roads": roadsLayerGroup,
-    "Trails": trailsLayerGroup,
     "Trail Features": trailFeaturesLayerGroup,
     "Points of Interest": visitorServiceFeaturesLayerGroup,
     "eBird Hotspots": eBirdHotspotsLayerGroup
@@ -94,7 +90,7 @@ var mapOptions = {
     maxZoom: 19,
     maxBounds: L.latLngBounds([26.586689, -82.259155], [26.398794, -81.867178]), // panning bounds so the user doesn't pan too far away from the refuge
     bounceAtZoomLimits: false, // Set it to false if you don't want the map to zoom beyond min/max zoom and then bounce back when pinch-zooming
-    layers: [Wikimedia, roadsLayerGroup, trailsLayerGroup, trailFeaturesLayerGroup, visitorServiceFeaturesLayerGroup, eBirdHotspotsLayerGroup] // Set the layers to build into the layer control
+    layers: [Wikimedia, trailFeaturesLayerGroup, visitorServiceFeaturesLayerGroup, eBirdHotspotsLayerGroup] // Set the layers to build into the layer control
 };
 
 
@@ -120,14 +116,16 @@ map.addLayer(Wikimedia);
 
 // Run the load data functions automatically when document loads
 $(document).ready(function () {
-    loadRefugeBoundary();
     loadParkingLots();
     loadRoads();
     loadTrails();
     loadTrailFeatures();
     loadVisitorServiceFeatures();
     loadeBirdHotspots();
+    loadRefugeBoundary();    
 });
+
+visitorServiceFeaturesLayerGroup.bringToFront();
 
 
 // Function to load the refuge boundary onto the map
@@ -158,6 +156,9 @@ function loadRefugeBoundary() {
             }
 
         }).addTo(map);
+        
+        // Bring the layer to the back of the layer order
+        refugeBoundary.bringToBack();        
     });
 };
 
@@ -235,8 +236,13 @@ function loadRoads() {
 
             }               
 
-        }).addTo(roadsLayerGroup);
+        }).addTo(map);
+        
+        // Bring the layer to the back of the layer order
+        roads.bringToBack();
     });
+    
+    
 };
 
 
@@ -276,7 +282,11 @@ function loadTrails() {
 
             }               
 
-        }).addTo(trailsLayerGroup);
+        }).addTo(map);
+        
+        // Bring the layer to the back of the layer order
+        trails.bringToBack();
+        
     });
 };
 
@@ -318,6 +328,9 @@ function loadTrailFeatures() {
             }               
 
         }).addTo(trailFeaturesLayerGroup);
+        
+        // Turn the layer off by default
+        map.removeLayer(trailFeaturesLayerGroup);        
     });
 
 };
@@ -400,6 +413,7 @@ function loadeBirdHotspots() {
 
         }).addTo(eBirdHotspotsLayerGroup);
         
+        // Turn the layer off by default
         map.removeLayer(eBirdHotspotsLayerGroup);
     });
 };
