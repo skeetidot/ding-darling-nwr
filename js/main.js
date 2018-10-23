@@ -1,14 +1,6 @@
 // Define Global Variables
 
-// Esri basemap tiles
-var Esri_WorldGrayCanvas = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
-});
-
-var Esri_WorldGrayReference = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
-});
-
+// Wikimedia basemap tiles
 var Wikimedia = L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png', {
     attribution: '<a href="https://wikimediafoundation.org/wiki/Maps_Terms_of_Use">Wikimedia</a>',
     minZoom: 1,
@@ -37,17 +29,112 @@ var layerList,
     overlays;
 
 
+// Initialize a global variable to hold the current location
+var myLocation = null;
+
+
+// Initialize a global variable that will hold the marker at the current location
+var locationMarker = null;
+
+
+
 // Initialize global variables for icons
 
-// Creates the bird marker
+// Create the bird marker
 // Plugin Source: https://github.com/lvoogdt/Leaflet.awesome-markers
 // Font Awesome Markers: https://fontawesome.com/icons?from=io
-var bird = L.AwesomeMarkers.icon({
+var birdIcon = L.AwesomeMarkers.icon({
     prefix: 'fa', // font awesome
     icon: 'crow',
     markerColor: 'cadetblue', // background color
     iconColor: 'white' // foreground color
 });
+
+
+// Create a marker for the user's current location
+var myLocationIcon = L.AwesomeMarkers.icon({
+    prefix: 'fa', // font awesome
+    icon: 'location-arrow',
+    markerColor: 'blue', // background color
+    iconColor: 'white' // foreground color
+});
+
+
+// Create a marker for a driving tour
+var drivingTourIcon = L.icon({
+    iconUrl: "icons/4_driving_tour.png"
+});
+
+// Create a marker for a fishing point
+var fishingPointIcon = L.icon({
+    iconUrl: "icons/5_fishing.png"
+});
+
+// Create a marker for a fishing pier
+var fishingPierIcon = L.icon({
+    iconUrl: "icons/6_fishing_pier.png"
+});
+
+// Create a marker for a hand launch / small boat launch
+var smallBoatLaunchIcon = L.icon({
+    iconUrl: "icons/8_hand_launch_small_boat_launch.png"
+});
+
+// Create a marker for an information point
+var infoPointIcon = L.icon({
+    iconUrl: "icons/11_information.png"
+});
+
+// Create a marker for an interpretive sign
+var interpretiveSignIcon = L.icon({
+    iconUrl: "icons/12_interpretive_sign.png"
+});
+
+// Create a marker for a scenic viewpoint
+var scenicViewpointIcon = L.icon({
+    iconUrl: "icons/14_scenic_viewpoint.png"
+});
+
+// Create a marker for an observation deck
+var observationDeckIcon = L.icon({
+    iconUrl: "icons/15_observation_deck.png"
+});
+
+// Create a marker for a parking area
+var parkingIcon = L.icon({
+    iconUrl: "icons/16_parking.png"
+});
+
+// Create a marker for a picnic area
+var picnicAreaIcon = L.icon({
+    iconUrl: "icons/17_picnic_area.png"
+});
+
+// Create a marker for a restroom
+var restroomIcon = L.icon({
+    iconUrl: "icons/18_restroom.png"
+});
+
+// Create a marker for a restroom
+var pavilionIcon = L.icon({
+    iconUrl: "icons/19_pavilion.png"
+});
+
+// Create a marker for a trailhead
+var trailheadIcon = L.icon({
+    iconUrl: "icons/20_trailhead.png"
+});
+
+// Create a marker for a lighthouse
+var lighthouseIcon = L.icon({
+    iconUrl: "icons/23_lighthouse.png"
+});
+
+// Create a marker for beach access
+var beachAccessIcon = L.icon({
+    iconUrl: "icons/35_beach_access.png"
+});
+
 
 
 // Set a global variable for the CARTO username
@@ -58,9 +145,9 @@ var cartoUserName = "lewinkler2";
 
 // SQL queries to get all features from each layer
 var sqlQueryRefugeBoundary = "SELECT * FROM refuge_boundary",
-    sqlQueryRoads = "SELECT * FROM roads",
+    sqlQueryRoads = "SELECT * FROM roads WHERE f_class IN (1, 2)",
     sqlQueryTrails = "SELECT * FROM trails",
-    sqlQueryTrailFeatures = "SELECT * FROM trail_features WHERE type_ IN ('Bench', 'Sign', 'Bridge -sf')",
+    sqlQueryTrailFeatures = "SELECT * FROM trail_features WHERE feature_type IN ('Bench', 'Sign', 'Bridge')",
     sqlQueryParkingLots = "SELECT * FROM parking_lots",
     sqlQueryVisitorServiceFeatures = "SELECT * FROM visitor_service_features",
     sqlQueryeBirdHotspots = "SELECT * FROM ebird_hotspots";
@@ -116,16 +203,41 @@ map.addLayer(Wikimedia);
 
 // Run the load data functions automatically when document loads
 $(document).ready(function () {
+
+    // Load all of the data
     loadRoads();
     loadTrails();
     loadTrailFeatures();
     loadVisitorServiceFeatures();
     loadeBirdHotspots();
-    loadParkingLots();    
-    loadRefugeBoundary();    
+    loadParkingLots();
+    loadRefugeBoundary();
+
+    // Get the user's current location
+    locateUser();
+
 });
 
-visitorServiceFeaturesLayerGroup.bringToFront();
+
+// Function that locates the user
+function locateUser() {
+    map.locate({
+        setView: true,
+        maxZoom: 13
+    });
+}
+
+
+// Set the current location to the point clicked on the map
+map.on('click', locationFound);
+
+// Map Event Listener listening for when the user location is found
+// When the location is found, run the locationFound(e) function
+map.on('locationfound', locationFound);
+
+// Map Event Listener listening for when the user location is not found
+// If the location is not found, run the locationNotFound(e) function
+map.on('locationerror', locationNotFound);
 
 
 // Function to load the refuge boundary onto the map
@@ -156,9 +268,9 @@ function loadRefugeBoundary() {
             }
 
         }).addTo(map);
-        
+
         // Bring the layer to the back of the layer order
-        refugeBoundary.bringToBack();        
+        refugeBoundary.bringToBack();
     });
 };
 
@@ -189,17 +301,17 @@ function loadParkingLots() {
                     fillOpacity: 0.5 // set fill opacity
                 };
             },
-            
+
             // Loop through each feature
             onEachFeature: function (feature, layer) {
 
                 // Bind the nameto a popup
-                layer.bindPopup(feature.properties.route_name + " (" + feature.properties.surface_ty + ")");
+                layer.bindPopup(feature.properties.route_name + " (" + feature.properties.surface_type + ")");
 
-            }               
+            }
 
         }).addTo(map);
-        
+
         // Bring the layer to the back of the layer order
         parkingLots.bringToBack();
     });
@@ -230,22 +342,22 @@ function loadRoads() {
                     opacity: 1 // set stroke opacity
                 };
             },
-            
+
             // Loop through each feature
             onEachFeature: function (feature, layer) {
 
                 // Bind the nameto a popup
                 layer.bindPopup(feature.properties.route_name);
 
-            }               
+            }
 
         }).addTo(map);
-        
+
         // Bring the layer to the back of the layer order
         roads.bringToBack();
     });
-    
-    
+
+
 };
 
 
@@ -276,22 +388,22 @@ function loadTrails() {
                     // Line Join Types: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-linejoin
                 };
             },
-            
+
             // Loop through each feature
             onEachFeature: function (feature, layer) {
-                
+
                 var length = parseFloat(feature.properties.sec_length).toFixed(2).toLocaleString()
 
                 // Bind the nameto a popup
                 layer.bindPopup(feature.properties.name + " (" + length + " mi)");
 
-            }               
+            }
 
         }).addTo(map);
-        
+
         // Bring the layer to the back of the layer order
         trails.bringToBack();
-        
+
     });
 };
 
@@ -323,23 +435,22 @@ function loadTrailFeatures() {
                     radius: 2.5
                 });
             },
-            
+
             // Loop through each feature
             onEachFeature: function (feature, layer) {
 
                 // Bind the nameto a popup
-                layer.bindPopup(feature.properties.type_);
+                layer.bindPopup(feature.properties.feature_type);
 
-            }               
+            }
 
         }).addTo(trailFeaturesLayerGroup);
-        
+
         // Turn the layer off by default
-        map.removeLayer(trailFeaturesLayerGroup);        
+        map.removeLayer(trailFeaturesLayerGroup);
     });
 
 };
-
 
 
 // Function to load the refuge visitor service features (points of interest) onto the map
@@ -360,25 +471,28 @@ function loadVisitorServiceFeatures() {
 
             // Create a style for the points
             pointToLayer: function (feature, latlng) {
-                return L.circleMarker(latlng, {
-                    fillColor: '#ffffff',
-                    fillOpacity: 1,
-                    color: '#3e3e3e',
-                    weight: 0.5,
-                    opacity: 1,
-                    radius: 10
+
+                // Get the feature category to use to set its icon
+                var featureType = feature.properties.category;
+
+                // Get the appropriate visitor service icon based on the feature category
+                return L.marker(latlng, {
+                    icon: getVisitorServiceIcon(featureType)
                 });
+
             },
-            
+
             // Loop through each feature
             onEachFeature: function (feature, layer) {
 
                 // Bind the nameto a popup
                 layer.bindPopup(feature.properties.name);
 
-            }            
+            }
 
         }).addTo(visitorServiceFeaturesLayerGroup);
+
+
     });
 };
 
@@ -403,22 +517,90 @@ function loadeBirdHotspots() {
             pointToLayer: function (feature, latlng) {
 
                 return L.marker(latlng, {
-                    icon: bird
+                    icon: birdIcon
                 });
 
             },
-            
+
             // Loop through each feature
             onEachFeature: function (feature, layer) {
 
                 // Bind the nameto a popup
                 layer.bindPopup(feature.properties.name + " Birding Hotspot");
 
-            }               
+            }
 
         }).addTo(eBirdHotspotsLayerGroup);
-        
+
         // Turn the layer off by default
         map.removeLayer(eBirdHotspotsLayerGroup);
     });
+};
+
+
+function getVisitorServiceIcon(category) {
+
+    if (category == 4) {
+        return drivingTourIcon;
+    } else if (category == 5) {
+        return fishingPointIcon;
+    } else if (category == 6) {
+        return fishingPierIcon;
+    } else if (category == 8) {
+        return smallBoatLaunchIcon;
+    } else if (category == 11) {
+        return infoPointIcon;
+    } else if (category == 12) {
+        return interpretiveSignIcon;
+    } else if (category == 14) {
+        return scenicViewpointIcon;
+    } else if (category == 15) {
+        return observationDeckIcon;
+    } else if (category == 16) {
+        return parkingIcon;
+    } else if (category == 17) {
+        return picnicAreaIcon;
+    } else if (category == 18) {
+        return restroomIcon;
+    } else if (category == 19) {
+        return pavilionIcon;
+    } else if (category == 20) {
+        return trailheadIcon;
+    } else if (category == 23) {
+        return lighthouseIcon;
+    } else if (category == 35) {
+        return beachAccessIcon;
+    }
+
+
+};
+
+// Function that will run when the location of the user is found
+function locationFound(e) {
+
+    // Get the current location
+    myLocation = e.latlng;
+
+    // Remove locationMarker if it's already on the map
+    if (map.hasLayer(locationMarker)) {
+        map.removeLayer(locationMarker);
+    };
+
+    // Add the locationMarker layer to the map at the current location
+    locationMarker = L.marker(e.latlng, {
+        icon: myLocationIcon
+    });
+
+    //map.addLayer(locationMarker);
+    locationMarker.addTo(map);
+
+    console.log(myLocation);
+};
+
+
+// Function that will run if the location of the user is not found
+function locationNotFound(e) {
+
+    // Display the default error message from Leaflet
+    alert(e.message);
 };
