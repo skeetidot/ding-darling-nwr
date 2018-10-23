@@ -8,10 +8,11 @@ var Wikimedia = L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.
 });
 
 
-// Initialize global variables for the layer groups that will be included in the layer list
+// Initialize global variables for the feature groups that will be included in the layer list
 var trailFeaturesLayerGroup = L.featureGroup(),
     visitorServiceFeaturesLayerGroup = L.featureGroup(),
-    eBirdHotspotsLayerGroup = L.featureGroup();
+    eBirdHotspotsLayerGroup = L.featureGroup(),
+    wildlifeObservationsLayerGroup = L.featureGroup(); 
 
 
 // Initialize global variables for data layers
@@ -21,7 +22,8 @@ var refugeBoundary,
     trailFeatures,
     parkingLots,
     visitorServiceFeatures,
-    eBirdHotspots;
+    eBirdHotspots,
+    wildlifeObservations;
 
 
 // Initialize global variables for the layer list and overlays
@@ -150,7 +152,8 @@ var sqlQueryRefugeBoundary = "SELECT * FROM refuge_boundary",
     sqlQueryTrailFeatures = "SELECT * FROM trail_features WHERE feature_type IN ('Bench', 'Sign', 'Bridge')",
     sqlQueryParkingLots = "SELECT * FROM parking_lots",
     sqlQueryVisitorServiceFeatures = "SELECT * FROM visitor_service_features",
-    sqlQueryeBirdHotspots = "SELECT * FROM ebird_hotspots";
+    sqlQueryeBirdHotspots = "SELECT * FROM ebird_hotspots",
+    sqlQueryWildlifeObservations = "SELECT * from wildlife_observations_collector";
 
 
 
@@ -165,7 +168,8 @@ var baseMaps = {
 var overlays = {
     "Trail Features": trailFeaturesLayerGroup,
     "Points of Interest": visitorServiceFeaturesLayerGroup,
-    "eBird Hotspots": eBirdHotspotsLayerGroup
+    "eBird Hotspots": eBirdHotspotsLayerGroup,
+    "Wildlife Observations": wildlifeObservationsLayerGroup
 };
 
 
@@ -177,7 +181,7 @@ var mapOptions = {
     maxZoom: 19,
     maxBounds: L.latLngBounds([26.586689, -82.259155], [26.398794, -81.867178]), // panning bounds so the user doesn't pan too far away from the refuge
     bounceAtZoomLimits: false, // Set it to false if you don't want the map to zoom beyond min/max zoom and then bounce back when pinch-zooming
-    layers: [Wikimedia, trailFeaturesLayerGroup, visitorServiceFeaturesLayerGroup, eBirdHotspotsLayerGroup] // Set the layers to build into the layer control
+    layers: [Wikimedia, trailFeaturesLayerGroup, visitorServiceFeaturesLayerGroup, eBirdHotspotsLayerGroup, wildlifeObservationsLayerGroup] // Set the layers to build into the layer control
 };
 
 
@@ -210,6 +214,7 @@ $(document).ready(function () {
     loadTrailFeatures();
     loadVisitorServiceFeatures();
     loadeBirdHotspots();
+    loadWildlifeObservations();
     loadParkingLots();
     loadRefugeBoundary();
 
@@ -246,7 +251,7 @@ function loadRefugeBoundary() {
     // If the layer is already shown on the map, remove it
     if (map.hasLayer(refugeBoundary)) {
         map.removeLayer(refugeBoundary);
-    };
+    }
 
     // Run the specified sqlQuery from CARTO, return it as a JSON, convert it to a Leaflet GeoJson, and add it to the map with a popup
 
@@ -272,7 +277,7 @@ function loadRefugeBoundary() {
         // Bring the layer to the back of the layer order
         refugeBoundary.bringToBack();
     });
-};
+}
 
 
 // Function to load the refuge parking lots onto the map
@@ -281,7 +286,7 @@ function loadParkingLots() {
     // If the layer is already shown on the map, remove it
     if (map.hasLayer(parkingLots)) {
         map.removeLayer(parkingLots);
-    };
+    }
 
     // Run the specified sqlQuery from CARTO, return it as a JSON, convert it to a Leaflet GeoJson, and add it to the map with a popup
 
@@ -315,7 +320,7 @@ function loadParkingLots() {
         // Bring the layer to the back of the layer order
         parkingLots.bringToBack();
     });
-};
+}
 
 
 // Function to load the refuge roads onto the map
@@ -324,7 +329,7 @@ function loadRoads() {
     // If the layer is already shown on the map, remove it
     if (map.hasLayer(roads)) {
         map.removeLayer(roads);
-    };
+    }
 
     // Run the specified sqlQuery from CARTO, return it as a JSON, convert it to a Leaflet GeoJson, and add it to the map with a popup
 
@@ -358,7 +363,7 @@ function loadRoads() {
     });
 
 
-};
+}
 
 
 // Function to load the refuge trails onto the map
@@ -367,7 +372,7 @@ function loadTrails() {
     // If the layer is already shown on the map, remove it
     if (map.hasLayer(trails)) {
         map.removeLayer(trails);
-    };
+    }
 
     // Run the specified sqlQuery from CARTO, return it as a JSON, convert it to a Leaflet GeoJson, and add it to the map with a popup
 
@@ -392,7 +397,7 @@ function loadTrails() {
             // Loop through each feature
             onEachFeature: function (feature, layer) {
 
-                var length = parseFloat(feature.properties.sec_length).toFixed(2).toLocaleString()
+                var length = parseFloat(feature.properties.sec_length).toFixed(2).toLocaleString();
 
                 // Bind the nameto a popup
                 layer.bindPopup(feature.properties.name + " (" + length + " mi)");
@@ -405,7 +410,7 @@ function loadTrails() {
         trails.bringToBack();
 
     });
-};
+}
 
 
 // Function to load the refuge trail features onto the map
@@ -414,7 +419,7 @@ function loadTrailFeatures() {
     // If the layer is already shown on the map, remove it
     if (map.hasLayer(trailFeatures)) {
         map.removeLayer(trailFeatures);
-    };
+    }
 
     // Run the specified sqlQuery from CARTO, return it as a JSON, convert it to a Leaflet GeoJson, and add it to the map with a popup
 
@@ -450,7 +455,7 @@ function loadTrailFeatures() {
         map.removeLayer(trailFeaturesLayerGroup);
     });
 
-};
+}
 
 
 // Function to load the refuge visitor service features (points of interest) onto the map
@@ -459,7 +464,7 @@ function loadVisitorServiceFeatures() {
     // If the layer is already shown on the map, remove it
     if (map.hasLayer(visitorServiceFeatures)) {
         map.removeLayer(visitorServiceFeatures);
-    };
+    }
 
     // Run the specified sqlQuery from CARTO, return it as a JSON, convert it to a Leaflet GeoJson, and add it to the map with a popup
 
@@ -494,7 +499,7 @@ function loadVisitorServiceFeatures() {
 
 
     });
-};
+}
 
 
 // Function to load eBird hotspots near the refuge onto the map
@@ -503,7 +508,7 @@ function loadeBirdHotspots() {
     // If the layer is already shown on the map, remove it
     if (map.hasLayer(eBirdHotspots)) {
         map.removeLayer(eBirdHotspots);
-    };
+    }
 
     // Run the specified sqlQuery from CARTO, return it as a JSON, convert it to a Leaflet GeoJson, and add it to the map with a popup
 
@@ -535,7 +540,7 @@ function loadeBirdHotspots() {
         // Turn the layer off by default
         map.removeLayer(eBirdHotspotsLayerGroup);
     });
-};
+}
 
 
 function getVisitorServiceIcon(category) {
@@ -573,7 +578,51 @@ function getVisitorServiceIcon(category) {
     }
 
 
-};
+}
+
+// Function to load the user-submitted wildlife observations onto the map
+function loadWildlifeObservations() {
+
+    // If the layer is already shown on the map, remove it
+    if (map.hasLayer(wildlifeObservations)) {
+        map.removeLayer(wildlifeObservations);
+    }
+
+    // Run the specified sqlQuery from CARTO, return it as a JSON, convert it to a Leaflet GeoJson, and add it to the map with a popup
+
+    // For the data source, enter the URL that goes to the SQL API, including our username and the SQL query
+    $.getJSON("https://" + cartoUserName + ".carto.com/api/v2/sql?format=GeoJSON&q=" + sqlQueryWildlifeObservations, function (data) {
+
+        // Convert the JSON to a Leaflet GeoJson
+        wildlifeObservations = L.geoJson(data, {
+
+            // Create a style for the points
+            pointToLayer: function (feature, latlng) {
+                return L.circleMarker(latlng, {
+                    fillColor: '#FF1493',
+                    fillOpacity: 1,
+                    color: '#3d3d3d',
+                    weight: 0.25,
+                    opacity: 1,
+                    radius: 5
+                });
+            },
+
+            // Loop through each feature
+            onEachFeature: function (feature, layer) {
+                
+                console.log(feature.properties.species);
+
+                // Bind the nameto a popup
+                layer.bindPopup(feature.properties.species);
+
+            }
+
+        }).addTo(wildlifeObservationsLayerGroup);
+
+    });
+
+}
 
 // Function that will run when the location of the user is found
 function locationFound(e) {
@@ -584,7 +633,7 @@ function locationFound(e) {
     // Remove locationMarker if it's already on the map
     if (map.hasLayer(locationMarker)) {
         map.removeLayer(locationMarker);
-    };
+    }
 
     // Add the locationMarker layer to the map at the current location
     locationMarker = L.marker(e.latlng, {
@@ -595,7 +644,7 @@ function locationFound(e) {
     locationMarker.addTo(map);
 
     console.log(myLocation);
-};
+}
 
 
 // Function that will run if the location of the user is not found
@@ -603,4 +652,4 @@ function locationNotFound(e) {
 
     // Display the default error message from Leaflet
     alert(e.message);
-};
+}
