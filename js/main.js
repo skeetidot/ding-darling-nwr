@@ -219,7 +219,7 @@ $(document).ready(function () {
     loadRefugeBoundary();
 
     // Get the user's current location
-    locateUser();
+    //locateUser();
 
 });
 
@@ -232,6 +232,21 @@ function locateUser() {
     });
 }
 
+// Set the width of the sidebar to 20% and the left margin of the page content to 20%
+function openNav() {
+    document.getElementById("mySidebar").style.width = "20%";
+    document.getElementById("main").style.marginLeft = "20%";
+    document.getElementById("map").style.marginLeft = "20%";
+    document.getElementById("map").style.width = "80%";
+}
+
+// Set the width of the sidebar to 0 and the left margin of the page content to 0
+function closeNav() {
+    document.getElementById("mySidebar").style.width = "0";
+    document.getElementById("main").style.marginLeft = "0";
+    document.getElementById("map").style.marginLeft = "0";
+    document.getElementById("map").style.width = "100%";    
+}
 
 // Set the current location to the point clicked on the map
 map.on('click', locationFound);
