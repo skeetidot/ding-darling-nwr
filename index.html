@@ -88,7 +88,7 @@
             <ul role="leaflet-tablist">
                 <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
                 <li><a href="#search" role="tab"><i class="fa fa-search"></i></a></li>
-                <li><a href="#submit" role="tab"><i class="fa fa-map-marker-alt"></i></a></li>                
+                <li><a href="#submit" role="tab"><i class="fa fa-map-marker-alt"></i></a></li>
             </ul>
         </div>
 
@@ -101,10 +101,32 @@
                 <p>This interactive visitor map shows the roads, trails, parking lots, and points of interest within J.N. "Ding" Darling National Wildlife Refuge in Sanibel, Florida. If you are in the park, your current location will be marked with a blue arrow.</p>
 
                 <p>The refuge is known as <a href="https://www.youtube.com/watch?v=hzEfZyU7sNs" target="_blank">"America's Birding Hotspot"</a> and is also home to iconic Florida <a href="https://www.dingdarlingsociety.org/animals/sightings?page=1&filter=all" target="_blank">wildlife</a>, including the Florida manatee, bottlenose dolphin, and American alligator. Use this map to view birding hotspots from eBird, view recent wildlife sightings, and submit your own observations.</p>
-        
+
+                <div align="center">
+                    <a href="https://www.fws.gov/refuge/jn_ding_darling/" target="_blank"><img src="images/ding-darling-logo.jpeg" alt="Ding Darling National Wildlife Refuge Logo" width="50%"></a>
+                </div>
+
+            </div>
+            <div class="leaflet-sidebar-pane" id="search">
+                <h1 class="leaflet-sidebar-header">Filter Points of Interest
+                    <span class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></span>
+                </h1>
+
                 <!-- Build UI control-->
-<!--
                 <div id='ui-controls'>
+
+                    <div id="fieldLabel"><label>Feature Type:</label></div>
+                    <select>
+                        <option value="drivingTour">Driving Tour</option>
+                        <option value="fishing">Fishing Sites</option>
+                        <option value="boatLaunches">Boat Launches</option>
+                        <option value="information">Practical Information</option>
+                        <option value="information">Trailheads</option>
+                        <option value="information">Scenic Points</option>
+                        <option value="information">Beaches</option>                        
+                    </select>
+
+                    <!--
                     <div id="fieldLabel"><label>Distance Decay Coefficient (q):</label></div>
                     <input type="text" id="distanceDecayCoefficient" value="2">
 
@@ -120,25 +142,44 @@
 
                     <div id="rSquaredLabel"><label>R-Squared:</label></div>
                     <div id="rSquared"></div>
-                </div>
 -->
-
-                <div align="center">
-                    <a href="https://www.fws.gov/refuge/jn_ding_darling/" target="_blank"><img src="images/ding-darling-logo.jpeg" alt="Ding Darling National Wildlife Refuge Logo" width="50%"></a>
                 </div>
 
-            </div>
-            <div class="leaflet-sidebar-pane" id="search">
-                <h1 class="leaflet-sidebar-header">Find Points of Interest
-                    <span class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></span>
-                </h1>                
-                
             </div>
             <div class="leaflet-sidebar-pane" id="submit">
                 <h1 class="leaflet-sidebar-header">Submit Wildlife Observations
                     <span class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></span>
-                </h1>                
-            </div>            
+                </h1>
+                <p>Submit your own wildlife observations</p>
+                
+                <!-- Build UI control-->
+                <div id='ui-controls'>
+                
+                    <div id="fieldLabel"><label>Latitude:</label></div>
+                    <input type="text" id="latitude">
+                
+                    <div id="fieldLabel"><label>Longitude:</label></div>
+                    <input type="text" id="longitude">                  
+                
+                    <div id="fieldLabel"><label>Species Family:</label></div>
+                    <select>
+                        <option value="birds">Birds</option>
+                        <option value="mammals">Mammals</option>
+                        <option value="reptiles">Reptiles</option>
+                        <option value="insectsArachnids">Insects and Arachnids</option>
+                        <option value="crustaceans">Crustaceans</option>                     
+                    </select>
+                    
+                    <div id="fieldLabel"><label>Species:</label></div>
+                    <select>
+                        <option value="TBD">TBD</option>                     
+                    </select>                    
+                
+                    <br><br>
+                    <input id="submitButton" type="submit" value="Submit">
+                    <input id="resetButton" type="submit" value="Reset">
+                </div>
+            </div>
         </div>
     </div>
 
