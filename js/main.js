@@ -288,7 +288,7 @@ function getResponsiveDisplay() {
     console.log("Screen Width: " + screenWidth);
 
     // Get the header text
-    var headerText = $('h1 #home');
+    var headerText = $('#home h1');
 
     // If the screen width is less than 800 pixels
     if (screenWidth < 800) {
