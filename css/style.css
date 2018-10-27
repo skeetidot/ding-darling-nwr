@@ -2,6 +2,7 @@
 
 /* CSS TO STYLE THE WHOLE PAGE */
 
+/*
 html,
 body {
     margin: 0;
@@ -22,6 +23,23 @@ body {
     width: 100%;
     font-family: "Roboto", "Open Sans", sans-serif;
 }
+*/
+
+html,
+body,
+#map {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    font-family: "Roboto", "Open Sans", sans-serif;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+#map {
+    z-index: 5;
+}
 
 /* BROWSER ADDS MARGIN BY DEFAULT. THIS GETS RID OF SCROLLBAR */
 
@@ -33,6 +51,7 @@ p {
     font-size: 1.1em;
 }
 
+/*
 #header {
     position: fixed;
     top: 0;
@@ -51,11 +70,13 @@ h1 {
     color: #F8F4F0;
     font-weight: 400;
 }
+*/
 
 /**********************************************************************/
 
 /* CSS FOR PHONE SCREEN SIZES (500px OR LESS) */
 
+/*
 @media (max-width: 500px) {
     h1 {
         font-size: 100%;
@@ -85,80 +106,8 @@ h1 {
         font-family: "Roboto", "Open Sans", sans-serif;
     }
 }
+*/
 
-
-/**********************************************************************/
-
-/* CSS FOR THE SIDEBAR */
-
-/* The sidebar menu */
-.sidebar {
-    height: 100%; /* 100% Full-height */
-    width: 0; /* 0 width - change this with JavaScript */
-    position: fixed; /* Stay in place */
-    z-index: 5000; /* Stay on top */
-    top: 3rem;
-    left: 0;
-    background-color: #426230; /* Black*/
-    overflow-x: hidden; /* Disable horizontal scroll */
-    padding-top: 60px; /* Place content 60px from the top */
-    transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
-}
-
-/* The sidebar links */
-.sidebar a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 25px;
-    color: #F8F4F0;
-    display: block;
-    transition: 0.3s;
-}
-
-/* When you mouse over the navigation links, change their color */
-.sidebar a:hover {
-    color: #FDE986;
-}
-
-/* Position and style the close button (top right corner) */
-.sidebar .closebtn {
-    position: absolute;
-    top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
-}
-
-/* The button used to open the sidebar */
-.openbtn {
-    position: fixed;
-    top: 0;
-    left: 0;
-    font-size: 20px;
-    cursor: pointer;
-    background-color: #426230;
-    color: #F8F4F0;
-    padding: 12px 15px;
-    border: none;
-    z-index: 1000;
-}
-
-.openbtn:hover {
-    background-color: #426230;
-    color: #FDE986;
-}
-
-/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
-#main {
-    transition: margin-left .5s; /* If you want a transition effect */
-    padding: 20px;
-}
-
-/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
-@media screen and (max-height: 450px) {
-    .sidebar {padding-top: 15px;}
-    .sidebar a {font-size: 18px;}
-}
 
 /**********************************************************************/
 
@@ -178,10 +127,46 @@ h1 {
     margin-bottom: 5px;
 }
 
-#ui-controls input[type="button"],
-input[type="submit"] {
+#ui-controls input[type="button"], input[type="submit"] {
     font-size: 1.1em;
     margin-right: 5px;
+}
+
+
+/**********************************************************************/
+
+/* CSS FOR THE LEAFLET SIDEBAR */
+
+.leaflet-sidebar-header {
+    background-color: #426230;
+}
+
+.leaflet-sidebar-tabs {
+    background-color: rgba(255, 255, 255, 0.95);
+}
+
+.leaflet-sidebar-tabs > li.active,
+.leaflet-sidebar-tabs > ul > li.active {
+    color: #fff;
+    background-color: #426230;
+}
+
+
+
+/**********************************************************************/
+
+/* CSS FOR THE REGRESSION EQUATION AND R-SQUARED LABELS */
+
+#regressionEquationLabel {
+    font-size: 1.25em;
+    font-weight: bold;
+    margin-top: 10px; 
+}
+
+#rSquaredLabel {
+    font-size: 1.25em;
+    font-weight: bold;
+    margin-top: 10px;   
 }
 
 
@@ -239,7 +224,7 @@ input[type="submit"] {
 
 .leaflet-touch .leaflet-control-layers {
     width: 200px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);    
 }
 
 .leaflet-top .leaflet-left .leaflet-control-zoom {

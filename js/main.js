@@ -7,12 +7,17 @@ var Wikimedia = L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.
     maxZoom: 19
 });
 
+var Esri_WorldImagery = L.tileLayer('https://clarity.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+	attribution: '<a href="http://www.arcgis.com/home/item.html?id=da10cf4ba254469caf8016cd66369157">Esri</a>',
+    maxNativeZoom: 18,
+    maxZoom: 19
+});
 
 // Initialize global variables for the feature groups that will be included in the layer list
 var trailFeaturesLayerGroup = L.featureGroup(),
     visitorServiceFeaturesLayerGroup = L.featureGroup(),
     eBirdHotspotsLayerGroup = L.featureGroup(),
-    wildlifeObservationsLayerGroup = L.featureGroup(); 
+    wildlifeObservationsLayerGroup = L.featureGroup();
 
 
 // Initialize global variables for data layers
@@ -39,6 +44,10 @@ var myLocation = null;
 var locationMarker = null;
 
 
+// Initialize the default bounds of the map
+var bounds = [[26.421850916199865, -82.30390548706056],
+              [26.512515912899676, -81.97431564331055]]
+
 
 // Initialize global variables for icons
 
@@ -52,7 +61,6 @@ var birdIcon = L.AwesomeMarkers.icon({
     iconColor: 'white' // foreground color
 });
 
-
 // Create a marker for the user's current location
 var myLocationIcon = L.AwesomeMarkers.icon({
     prefix: 'fa', // font awesome
@@ -60,7 +68,6 @@ var myLocationIcon = L.AwesomeMarkers.icon({
     markerColor: 'blue', // background color
     iconColor: 'white' // foreground color
 });
-
 
 // Create a marker for a driving tour
 var drivingTourIcon = L.icon({
@@ -138,7 +145,6 @@ var beachAccessIcon = L.icon({
 });
 
 
-
 // Set a global variable for the CARTO username
 var cartoUserName = "lewinkler2";
 
@@ -158,9 +164,10 @@ var sqlQueryRefugeBoundary = "SELECT * FROM refuge_boundary",
 
 
 // Set the basemap for the layer list
-// Only include one basemap so it is not part of the layer list
+// If only one basemap is included, it is not part of the layer list
 var baseMaps = {
-    "Wikimedia": Wikimedia
+    "Streets": Wikimedia,
+    "Imagery": Esri_WorldImagery
 };
 
 
@@ -175,13 +182,14 @@ var overlays = {
 
 // Set the map options
 var mapOptions = {
-    center: [26.454422, -82.108508], // centered in Ding Darling NWR
+    center: [26.474422, -82.058508], // centered in Ding Darling NWR
     zoom: 13,
     minZoom: 13,
     maxZoom: 19,
-    maxBounds: L.latLngBounds([26.586689, -82.259155], [26.398794, -81.867178]), // panning bounds so the user doesn't pan too far away from the refuge
+    zoomControl: false, // do not add a zoom control by default (it will be added based on screen width)
+    maxBounds: L.latLngBounds([26.586689, -82.409155], [26.398794, -81.867178]), // panning bounds so the user doesn't pan too far away from the refuge
     bounceAtZoomLimits: false, // Set it to false if you don't want the map to zoom beyond min/max zoom and then bounce back when pinch-zooming
-    layers: [Wikimedia, trailFeaturesLayerGroup, visitorServiceFeaturesLayerGroup, eBirdHotspotsLayerGroup, wildlifeObservationsLayerGroup] // Set the layers to build into the layer control
+    layers: [trailFeaturesLayerGroup, visitorServiceFeaturesLayerGroup, eBirdHotspotsLayerGroup, wildlifeObservationsLayerGroup] // Set the layers to build into the layer control
 };
 
 
@@ -189,20 +197,33 @@ var mapOptions = {
 var map = L.map('map', mapOptions);
 
 
-// Add the zoom control in the top left corner
-map.zoomControl.setPosition('topleft');
+// Initialize a zoom control that will show in the top right corner based on the detected screen width
+var zoomControl = L.control.zoom({
+    position: 'topleft'
+});
 
 
 // Add the layer control to the map
 layerList = L.control.layers(baseMaps, overlays, {
     collapsed: false, // Keep the layer list open
     autoZIndex: true, // Assign zIndexes in increasing order to all of its layers so that the order is preserved when switching them on/off
-    hideSingleBase: true // Hide the base layers section when there is only one layer
+   // hideSingleBase: true // Hide the base layers section when there is only one layer
 }).addTo(map);
 
 
 // Add the basemap
 map.addLayer(Wikimedia);
+
+
+// Build the sidebar and add it to the map
+// Source: https://github.com/nickpeihl/leaflet-sidebar-v2, with show/hide functionality from
+// https://github.com/turbo87/leaflet-sidebar/
+var sidebar = L.control.sidebar({
+    autopan: true, // whether to maintain the centered map point when opening the sidebar
+    closeButton: true, // whether to add a close button to the panes
+    container: 'sidebar', // the DOM container or #ID of a predefined sidebar container that should be used
+    position: 'left', // left or right
+}).addTo(map);
 
 
 // Run the load data functions automatically when document loads
@@ -219,7 +240,10 @@ $(document).ready(function () {
     loadRefugeBoundary();
 
     // Get the user's current location
-    //locateUser();
+    locateUser();
+
+    // Detect the screen size and get the appropriate sidebar and zoom display
+    getResponsiveDisplay();
 
 });
 
@@ -232,32 +256,87 @@ function locateUser() {
     });
 }
 
-// Set the width of the sidebar to 20% and the left margin of the page content to 20%
-function openNav() {
-    document.getElementById("mySidebar").style.width = "20%";
-    document.getElementById("main").style.marginLeft = "20%";
-    document.getElementById("map").style.marginLeft = "20%";
-    document.getElementById("map").style.width = "80%";
-}
 
-// Set the width of the sidebar to 0 and the left margin of the page content to 0
-function closeNav() {
-    document.getElementById("mySidebar").style.width = "0";
-    document.getElementById("main").style.marginLeft = "0";
-    document.getElementById("map").style.marginLeft = "0";
-    document.getElementById("map").style.width = "100%";    
-}
+// When the window is resized
+$(window).resize(function () {
+
+    // Detect the screen size and get the appropriate sidebar and zoom display
+    getResponsiveDisplay();
+
+});
+
 
 // Set the current location to the point clicked on the map
-map.on('click', locationFound);
+//map.on('click', locationFound);
+
 
 // Map Event Listener listening for when the user location is found
 // When the location is found, run the locationFound(e) function
 map.on('locationfound', locationFound);
 
+
 // Map Event Listener listening for when the user location is not found
 // If the location is not found, run the locationNotFound(e) function
 map.on('locationerror', locationNotFound);
+
+
+// Function that gets the screen width and customizes the display
+function getResponsiveDisplay() {
+
+    // Get the screen width
+    var screenWidth = screen.width;
+    console.log("Screen Width: " + screenWidth);
+
+    // Get the header text
+    var headerText = $('h1 #home');
+
+    // If the screen width is less than 800 pixels
+    if (screenWidth < 800) {
+
+        // Collapse the sidebar
+        sidebar.close();
+
+        // Remove the zoom control
+        zoomControl.remove();
+
+        // Abbreviate the header text
+        headerText.text('J.N. "Ding" Darling NWR');
+
+        // Zoom out to show the extent of the refuge at this scale
+        map.setMinZoom(11);
+        map.setZoom(11);
+
+        // Fit the map to the refuge bounds
+        map.fitBounds(bounds);
+
+    }
+
+    // If the screen width is greater than or equal to 800 pixels
+    else if (screenWidth >= 800) {
+
+        // Expand the sidebar and show the home tab
+        sidebar.open('home');
+
+        // Add the zoom control
+        zoomControl.addTo(map);
+
+        // If the screen width is less than 1200 pixels, show the abbreviated header text
+        // Otherwise, show the full header text
+        if (screenWidth < 1200) {
+            headerText.text('J.N. "Ding" Darling NWR');
+        } else {
+            headerText.text('J.N. "Ding" Darling National Wildlife Refuge');
+        }
+
+        // Show the extent of the refuge at its original scale
+        map.setMinZoom(13);
+        map.setZoom(13);
+
+        // Fit the map to the refuge bounds
+        map.fitBounds(bounds);
+
+    }
+}
 
 
 // Function to load the refuge boundary onto the map
@@ -558,6 +637,7 @@ function loadeBirdHotspots() {
 }
 
 
+// Function to get the icon for each visitor service feature based on its category
 function getVisitorServiceIcon(category) {
 
     if (category == 4) {
@@ -590,10 +670,12 @@ function getVisitorServiceIcon(category) {
         return lighthouseIcon;
     } else if (category == 35) {
         return beachAccessIcon;
+    } else if (category == 99) {
+        return tarponBayExplorersIcon;
     }
 
-
 }
+
 
 // Function to load the user-submitted wildlife observations onto the map
 function loadWildlifeObservations() {
@@ -625,7 +707,7 @@ function loadWildlifeObservations() {
 
             // Loop through each feature
             onEachFeature: function (feature, layer) {
-                
+
                 console.log(feature.properties.species);
 
                 // Bind the nameto a popup
@@ -639,26 +721,40 @@ function loadWildlifeObservations() {
 
 }
 
+
 // Function that will run when the location of the user is found
 function locationFound(e) {
 
     // Get the current location
     myLocation = e.latlng;
 
-    // Remove locationMarker if it's already on the map
-    if (map.hasLayer(locationMarker)) {
-        map.removeLayer(locationMarker);
+    // If the current location is outside the bounds of the map, reset the map to the refuge bounds
+    if (myLocation.lat < bounds[0][0] || myLocation.lat > bounds[1][0] ||
+        myLocation.long < bounds[0][1] || myLocation.long > bounds[1][1]) {
+        
+        alert("You are outside of the refuge");
+        
+        // Reset the map to the refuge bounds
+        map.fitBounds(bounds);
+        
+    } else {
+
+        // Remove locationMarker if it's already on the map
+        if (map.hasLayer(locationMarker)) {
+            map.removeLayer(locationMarker);
+        }
+
+        // Add the locationMarker layer to the map at the current location
+        locationMarker = L.marker(e.latlng, {
+            icon: myLocationIcon
+        });
+        
+        // Bind a popup
+        locationMarker.bindPopup("You are here");
+
+        // Add the location marker to the map
+        locationMarker.addTo(map);
     }
-
-    // Add the locationMarker layer to the map at the current location
-    locationMarker = L.marker(e.latlng, {
-        icon: myLocationIcon
-    });
-
-    //map.addLayer(locationMarker);
-    locationMarker.addTo(map);
-
-    console.log(myLocation);
 }
 
 

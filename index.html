@@ -54,7 +54,9 @@
     <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"></script>
 
     <!-- LEAFLET SIDEBAR -->
+    <script src="lib/leaflet-sidebar/src/L.Control.Sidebar.js"></script>
     <script src="lib/leaflet-sidebar-v2/js/leaflet-sidebar.js"></script>
+
 
     <!-- LEAFLET AWESOME MARKERS -->
     <script src="lib/leaflet.awesome-markers-2.0/dist/leaflet.awesome-markers.js"></script>
@@ -76,28 +78,68 @@
         window.jQuery || document.write('<script src="js/vendor/jquery-3.3.1.min.js"><\/script>')
     </script>
 
-    <!-- HEADER -->
-    <div id="header">
-        <h1>J.N. "Ding" Darling National Wildlife Refuge Visitor Map</h1>
-    </div>
-
-    <div id="phone-header">
-        <h1>J.N. "Ding" Darling National Wildlife Refuge</h1>
-    </div>
-
-    <div id="mySidebar" class="sidebar">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="#">About</a>
-        <a href="#">Services</a>
-        <a href="#">Clients</a>
-        <a href="#">Contact</a>
-    </div>
-
     <!-- MAP -->
+    <div class="sidebar-map" id="map"></div>
 
-    <div id="main">
-        <button class="openbtn" onclick="openNav()">&#9776;</button>
-        <div id="map"></div>
+    <!-- SIDEBAR -->
+    <div id="sidebar" class="leaflet-sidebar collapsed">
+        <!-- Nav tabs -->
+        <div class="leaflet-sidebar-tabs">
+            <ul role="leaflet-tablist">
+                <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
+                <li><a href="#search" role="tab"><i class="fa fa-search"></i></a></li>
+                <li><a href="#submit" role="tab"><i class="fa fa-map-marker-alt"></i></a></li>                
+            </ul>
+        </div>
+
+        <!-- Tab panes -->
+        <div class="leaflet-sidebar-content">
+            <div class="leaflet-sidebar-pane" id="home">
+                <h1 class="leaflet-sidebar-header">J.N. "Ding" Darling National Wildlife Refuge
+                    <span class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></span>
+                </h1>
+                <p>This interactive visitor map shows the roads, trails, parking lots, and points of interest within J.N. "Ding" Darling National Wildlife Refuge in Sanibel, Florida. If you are in the park, your current location will be marked with a blue arrow.</p>
+
+                <p>The refuge is known as <a href="https://www.youtube.com/watch?v=hzEfZyU7sNs" target="_blank">"America's Birding Hotspot"</a> and is also home to iconic Florida <a href="https://www.dingdarlingsociety.org/animals/sightings?page=1&filter=all" target="_blank">wildlife</a>, including the Florida manatee, bottlenose dolphin, and American alligator. Use this map to view birding hotspots from eBird, view recent wildlife sightings, and submit your own observations.</p>
+        
+                <!-- Build UI control-->
+<!--
+                <div id='ui-controls'>
+                    <div id="fieldLabel"><label>Distance Decay Coefficient (q):</label></div>
+                    <input type="text" id="distanceDecayCoefficient" value="2">
+
+                    <div id="fieldLabel"><label>Hexbin Size (sq km):</label></div>
+                    <input type="text" id="hexbinArea" value="10">
+
+                    <br><br>
+                    <input id="submitButton" type="submit" value="Submit">
+                    <input id="resetButton" type="submit" value="Reset">
+
+                    <div id="regressionEquationLabel"><label>Regression Equation:</label></div>
+                    <div id="regressionEquation"></div>
+
+                    <div id="rSquaredLabel"><label>R-Squared:</label></div>
+                    <div id="rSquared"></div>
+                </div>
+-->
+
+                <div align="center">
+                    <a href="https://www.fws.gov/refuge/jn_ding_darling/" target="_blank"><img src="images/ding-darling-logo.jpeg" alt="Ding Darling National Wildlife Refuge Logo" width="50%"></a>
+                </div>
+
+            </div>
+            <div class="leaflet-sidebar-pane" id="search">
+                <h1 class="leaflet-sidebar-header">Find Points of Interest
+                    <span class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></span>
+                </h1>                
+                
+            </div>
+            <div class="leaflet-sidebar-pane" id="submit">
+                <h1 class="leaflet-sidebar-header">Submit Wildlife Observations
+                    <span class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></span>
+                </h1>                
+            </div>            
+        </div>
     </div>
 
     <!-- LINK TO MAIN JAVASCRIPT-->
