@@ -967,8 +967,13 @@ function startEdits() {
     map.addControl(drawControl);
     controlOnMap = true;
     
-    // Collapse the sidebar
-    sidebar.close();
+    // If the screen width is less than 800 pixels
+    if (screen.width < 800) {
+        
+        // Collapse the sidebar
+        sidebar.close();        
+    }
+
 };
 
 
@@ -1123,8 +1128,19 @@ var submitToProxy = function (q) {
 
 // Function to refresh the layers to show the updated dataset
 function refreshLayer() {
+    
+    // Remove the existing wildlife observations layer
     if (map.hasLayer(wildlifeObservations)) {
         map.removeLayer(wildlifeObservations);
     };
+    
+    // Reload the wildlife observations layer with the new point
     loadWildlifeObservations();
+    
+    // If the screen width is less than 800 pixels
+    if (screen.width < 800) {
+        
+        // Collapse the sidebar
+        sidebar.close();        
+    }
 };
