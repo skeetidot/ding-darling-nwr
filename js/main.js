@@ -8,7 +8,7 @@ var Wikimedia = L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.
 });
 
 var Esri_WorldImagery = L.tileLayer('https://clarity.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-	attribution: '<a href="http://www.arcgis.com/home/item.html?id=da10cf4ba254469caf8016cd66369157">Esri</a>',
+    attribution: '<a href="http://www.arcgis.com/home/item.html?id=da10cf4ba254469caf8016cd66369157">Esri</a>',
     maxNativeZoom: 18,
     maxZoom: 19
 });
@@ -48,6 +48,141 @@ var locationMarker = null;
 var bounds = [[26.421850916199865, -82.30390548706056],
               [26.512515912899676, -81.97431564331055]]
 
+
+// Initialize the list of common species for each species group
+var speciesJsonList = {
+    
+    "Birds" : 
+    [
+        {"species" : "Anhinga"},
+        {"species" : "Belted Kingfisher"},
+        {"species" : "Black-bellied Plover"},
+        {"species" : "Blue-gray Gnatcatcher"},
+        {"species" : "Blue-winged Teal"},
+        {"species" : "Carolina Wren"},
+        {"species" : "Common Gallinule"},
+        {"species" : "Common Grackle"},
+        {"species" : "Common Ground Dove"},
+        {"species" : "Double-crested Cormorant"},
+        {"species" : "Dunlin"},
+        {"species" : "Eurasian Collared Dove"},
+        {"species" : "Fish Crow"},
+        {"species" : "Gray Catbird"},
+        {"species" : "Great Blue Heron"},
+        {"species" : "Great Crested Flycatcher"},
+        {"species" : "Great Egret"},
+        {"species" : "Greater Yellowlegs"},
+        {"species" : "Green Heron"},
+        {"species" : "Killdeer"},
+        {"species" : "Least Sandpiper"},
+        {"species" : "Lesser Yellowlegs"},
+        {"species" : "Little Blue Heron"},
+        {"species" : "Mottled Duck"},
+        {"species" : "Mourning Dove"},
+        {"species" : "Northern Cardinal"},
+        {"species" : "Osprey"},
+        {"species" : "Palm Warbler"},
+        {"species" : "Pied-billed Grebe"},
+        {"species" : "Pileated Woodpecker"},
+        {"species" : "Prairie Warbler"},
+        {"species" : "Red-bellied Woodpecker"},
+        {"species" : "Red-shouldered Hawk"},
+        {"species" : "Reddish Egret"},
+        {"species" : "Roseate Spoonbill"},
+        {"species" : "Ruddy Turnstone"},
+        {"species" : "Semipalmated Plover"},
+        {"species" : "Short-billed Dowitcher"},
+        {"species" : "Snowy Egret"},
+        {"species" : "Spotted Sandpiper"},
+        {"species" : "Tricolored Heron"},
+        {"species" : "Turkey Vulture"},
+        {"species" : "Western Sandpiper"},
+        {"species" : "White Ibis"},
+        {"species" : "White-eyed Vireo"},
+        {"species" : "Willet"},
+        {"species" : "Yellow-crowned Night Heron"},
+        {"species" : "Yellow-throated Warbler"}     
+    ],
+    "Mammals" : 
+    [
+        {"species" : "Bobcat"},
+        {"species" : "Bottlenose Dolphin"},
+        {"species" : "Coyote"},
+        {"species" : "Florida Manatee"},
+        {"species" : "Marsh Rabbit"},
+        {"species" : "Nine-banded Armadillo"},
+        {"species" : "Northern Raccoon"},
+        {"species" : "River Otter"},
+        {"species" : "Virginia Opossum"}     
+    ],
+    "Reptiles" : 
+    [
+        {"species" : "American Alligator"},
+        {"species" : "Black Racer"},
+        {"species" : "Brown Anole Lizard"},
+        {"species" : "Chicken Turtle"},
+        {"species" : "Diamondback Terrapin"},
+        {"species" : "Florida Banded Water Snake"},
+        {"species" : "Florida Box Turtle"},
+        {"species" : "Florida Softshell Turtle"},
+        {"species" : "Gopher Tortoise"},
+        {"species" : "Green Anole Lizard"},
+        {"species" : "Green Iguana"},
+        {"species" : "Mangrove Salt Marsh Water Snake"},
+        {"species" : "Peninsula Cooter Turtle"},
+        {"species" : "Red Rat Snake / Corn Snake"},
+        {"species" : "Ring-necked Snake"},
+        {"species" : "Southern Five-lined Skink"},
+        {"species" : "Yellow Rate Snake"}
+    ],
+    "Amphibians" : 
+    [
+        {"species" : "Cuban Tree Frog"},
+        {"species" : "Pig Frog"},
+        {"species" : "Southern Leopard Frog"},
+        {"species" : "Southern Toad"}
+    ],
+    "Insects and Arachnids" : 
+    [
+        {"species" : "Blue Ceraunus Butterfly"},
+        {"species" : "Cloudless Sulphur Butterfly"},
+        {"species" : "Giant Swallowtail Butterfly"},
+        {"species" : "Great Southern White Butterfly"},
+        {"species" : "Gulf Fritillary Butterfly"},
+        {"species" : "Halloween Pennant Butterfly"},
+        {"species" : "Lubber Grasshopper"},
+        {"species" : "Mangrove Buckeye Butterfly"},
+        {"species" : "Mangrove Skipper"},
+        {"species" : "Monarch Butterfly"},
+        {"species" : "White Peacock Butterfly"},
+        {"species" : "Zebra Longwing Butterfly"}
+    ],
+    "Crustaceans" : 
+    [
+        {"species" : "Fiddler Crab"},
+        {"species" : "Horseshoe Crab"},
+        {"species" : "Mangrove Tree Crab"}
+    ]    
+};
+
+var updateSpeciesDropdown = function (speciesGroup) {
+    console.log('updating with', speciesGroup);
+    var listItems = "";
+    for (var i = 0; i < speciesJsonList[speciesGroup].length; i++) {
+        listItems += "<option value='" + speciesJsonList[speciesGroup][i].species + "'>" + speciesJsonList[speciesGroup][i].species + "</option>";
+    }
+    $("#ui-controls #speciesDropdown").html(listItems);
+}
+
+var speciesFamilyDropdown = $("#speciesFamilyDropdown")
+console.log(speciesFamilyDropdown);
+
+speciesFamilyDropdown.on('change',function(){
+    console.log("species family dropdown changed");
+    var selectedSpeciesGroup = $("#speciesFamilyDropdown option:selected").text();
+    console.log(selectedSpeciesGroup);
+    updateSpeciesDropdown(selectedSpeciesGroup);
+});
 
 // Initialize global variables for icons
 
@@ -207,8 +342,37 @@ var zoomControl = L.control.zoom({
 layerList = L.control.layers(baseMaps, overlays, {
     collapsed: false, // Keep the layer list open
     autoZIndex: true, // Assign zIndexes in increasing order to all of its layers so that the order is preserved when switching them on/off
-   // hideSingleBase: true // Hide the base layers section when there is only one layer
+    // hideSingleBase: true // Hide the base layers section when there is only one layer
 }).addTo(map);
+
+
+// Create Leaflet Draw Control for the draw tools and toolbox
+var drawControl = new L.Control.Draw({
+
+    // Disable drawing of polygons, polylines, rectangles, and circles
+    // Users will only be able to draw markers (points)
+    draw: {
+        polygon: false,
+        polyline: false,
+        rectangle: false,
+        circle: false
+    },
+
+    // Disable editing and deleting points
+    edit: false,
+    remove: false,
+    position: 'topright'
+});
+
+
+// Boolean global variable used to control visiblity
+// Do not show the draw control on the map initially
+// It will be displayed once the user clicks Start Editing
+var controlOnMap = false;
+
+
+// Create variable for Leaflet.draw features
+var drawnItems = new L.FeatureGroup();
 
 
 // Add the basemap
@@ -289,6 +453,9 @@ function getResponsiveDisplay() {
 
     // Get the header text
     var headerText = $('#home h1');
+    
+    // Get the header text
+    var submitHeaderText = $('#submitTab h1');
 
     // If the screen width is less than 800 pixels
     if (screenWidth < 800) {
@@ -301,6 +468,7 @@ function getResponsiveDisplay() {
 
         // Abbreviate the header text
         headerText.text('J.N. "Ding" Darling NWR');
+        submitHeaderText.text('Submit Observations');
 
         // Zoom out to show the extent of the refuge at this scale
         map.setMinZoom(11);
@@ -324,6 +492,7 @@ function getResponsiveDisplay() {
         // Otherwise, show the full header text
         if (screenWidth < 1200) {
             headerText.text('J.N. "Ding" Darling NWR');
+            submitHeaderText.text('Submit Observations');
         } else {
             headerText.text('J.N. "Ding" Darling National Wildlife Refuge');
         }
@@ -728,15 +897,20 @@ function locationFound(e) {
     // Get the current location
     myLocation = e.latlng;
 
+    console.log(myLocation);
+
     // If the current location is outside the bounds of the map, reset the map to the refuge bounds
     if (myLocation.lat < bounds[0][0] || myLocation.lat > bounds[1][0] ||
         myLocation.long < bounds[0][1] || myLocation.long > bounds[1][1]) {
-        
+
         alert("You are outside of the refuge");
-        
+
         // Reset the map to the refuge bounds
         map.fitBounds(bounds);
         
+        // Disable the Use Current Location button, so observations can only be submitted by clicking a point
+        $('#ui-controls #currentLocationButton').attr("disabled", true);         
+
     } else {
 
         // Remove locationMarker if it's already on the map
@@ -748,12 +922,13 @@ function locationFound(e) {
         locationMarker = L.marker(e.latlng, {
             icon: myLocationIcon
         });
-        
+
         // Bind a popup
         locationMarker.bindPopup("You are here");
 
         // Add the location marker to the map
         locationMarker.addTo(map);
+
     }
 }
 
@@ -763,4 +938,193 @@ function locationNotFound(e) {
 
     // Display the default error message from Leaflet
     alert(e.message);
+    
+    // Disable the Use Current Location button, so observations can only be submitted by clicking a point
+    $('#ui-controls #currentLocationButton').attr("disabled", true);    
+
 }
+
+
+// Function to add the draw control to the map to start editing
+function startEdits() {
+    
+    // Remove the drawnItems layer from the map
+    map.removeLayer(drawnItems);
+    
+    // Clear the latitude and longitude textboxes
+    $('#ui-controls #latitude').val("");
+    $('#ui-controls #longitude').val("");   
+    $('#speciesFamilyDropdown').val('default').attr('selected');
+    $('#speciesDropdown').val('default').attr('selected');    
+
+    // If the draw control is already on the map remove it and set the controlOnMap flag back to false
+    if (controlOnMap == true) {
+        map.removeControl(drawControl);
+        controlOnMap = false;
+    }
+
+    // Add the draw control to the map and set the controlOnMap flag to true
+    map.addControl(drawControl);
+    controlOnMap = true;
+    
+    // Collapse the sidebar
+    sidebar.close();
+};
+
+
+// Function to remove the draw control from the map
+function stopEdits() {
+
+    // Remove the draw control from the map and set the controlOnMap flag back to false
+    map.removeControl(drawControl);
+    controlOnMap = false;
+};
+
+
+// Function to run when the Current Location button is clicked
+function addPointAtCurrentLocation() {
+
+    // Get the user's current location
+    locateUser();
+
+    console.log("in add point at current location");
+    console.log(myLocation);
+
+    // When a feature is created on the map, a layer on which it sits is also created.
+    // Create the locationMarker layer from the current location
+    locationMarker = L.marker(myLocation, {
+        icon: myLocationIcon
+    });
+    
+    // Get the latitude and longitude
+    var latitude = myLocation.lat;
+    var longitude = myLocation.lng;   
+    
+    // Populate the latitude and longitude textboxes with the coordinates of the current location
+    $('#ui-controls #latitude').val(latitude);
+    $('#ui-controls #longitude').val(longitude);
+    
+
+    // Add the new layer to the drawnItems feature group
+    drawnItems.addLayer(locationMarker);
+
+    // Add the drawnItems feature group to the map
+    map.addLayer(drawnItems);
+
+    // Expand the sidebar and show the submit tab for the user to enter attributes about the new feature
+    sidebar.open('submitTab');
+
+}
+
+
+// Function to run when a feature is drawn on the map
+map.on('draw:created', function (e) {
+
+    // Remove the point tool
+    stopEdits();
+    
+    // Expand the sidebar and show the submit tab for the user to enter attributes about the new feature
+    sidebar.open('submitTab');
+
+    // When a feature is created on the map, a layer on which it sits is also created. Create a new layer from this automatically created layer.
+    var layer = e.layer;
+
+    // Get the latitude and longitude
+    var latitude = layer.getLatLng().lat;
+    var longitude = layer.getLatLng().lng;
+
+    // Add the new layer to the drawnItems feature group
+    drawnItems.addLayer(layer);
+
+    // Add the drawnItems feature group to the map
+    map.addLayer(drawnItems);
+
+    // Expand the sidebar and show the submit tab for the user to enter attributes about the new feature
+    sidebar.open('submitTab');
+    
+    // Populate the latitude and longitude textboxes with the coordinates of the clicked point
+    $('#ui-controls #latitude').val(latitude);
+    $('#ui-controls #longitude').val(longitude);    
+
+});
+
+
+// Function to create variables for the location and attributes of the point just drawn and run a SQL query to insert the point into the data_collector layer in CARTO
+function setData() {
+    
+    // Get the name and description submitted by the user
+    var speciesFamily = $("#speciesFamilyDropdown option:selected").text();
+    var species = $("#speciesDropdown option:selected").text();
+
+    // Loop through each of the drawn items
+    drawnItems.eachLayer(function (layer) {
+
+        // Write a SQL/PostGIS query to insert the geometry, name, and description for the drawn item into the data_collector table
+        // Set the spatial reference baesd on the GeoJSON
+        var sql = "INSERT INTO wildlife_observations_collector (the_geom, species_family, species, latitude, longitude) VALUES (ST_SetSRID(ST_GeomFromGeoJSON('";
+
+        // Get the coordinates of the drawn point and add them to the SQL statement
+        var a = layer.getLatLng();
+        var sql2 = '{"type":"Point","coordinates":[' + a.lng + "," + a.lat + "]}'),4326),'" + speciesFamily + "','" + species + "','" + parseFloat(a.lat) + "','" + parseFloat(a.lng) + "')";
+
+        // Combine the two parts of the SQL statement
+        var pURL = sql + sql2;
+        
+        console.log(pURL);
+
+        /* Full SQL statement:
+        INSERT INTO data_collector (the_geom, species_family, species, latitude, longitude)
+                
+        VALUES ST_SetSRID(ST_GeomFromGeoJSON('{"type":"Point","coordinates":[ {longitude value},{latitude value} ]}'),4326), '{description value}','{name value}','{longitude value}','{latitude value}')";
+        */
+
+        // Submit the SQL statement to the PHP proxy, so it can be added to the database without exposing the CARTO API key
+        submitToProxy(pURL);
+        console.log("Feature has been submitted to the Proxy");
+    });
+
+    // Remove the drawn items layer from the map
+    map.removeLayer(drawnItems);
+
+    // Create a new empty drawnItems feature group to capture the next user-drawn data
+    drawnItems = new L.FeatureGroup();
+    console.log("drawnItems has been cleared");
+
+};
+
+
+// Function to cancel the newly drawn points
+function cancelData() {
+    
+    // Remove the drawnItems layer from the map
+    map.removeLayer(drawnItems);
+    
+    // Clear the latitude and longitude textboxes
+    $('#ui-controls #latitude').val('');
+    $('#ui-controls #longitude').val('');
+    $('#speciesFamilyDropdown').val('default').attr('selected');
+    $('#speciesDropdown').val('default').attr('selected');
+}
+
+
+// Function to submit data to the PHP proxy using the jQuery post() method
+var submitToProxy = function (q) {
+    $.post("php/callProxy.php", { // <--- Enter the path to your callProxy.php file here
+        qurl: q,
+        cache: false,
+        timeStamp: new Date().getTime()
+    }, function (data) {
+        console.log(data);
+
+        // Refresh the layer to show the updated data
+        refreshLayer();
+    });
+};
+
+// Function to refresh the layers to show the updated dataset
+function refreshLayer() {
+    if (map.hasLayer(wildlifeObservations)) {
+        map.removeLayer(wildlifeObservations);
+    };
+    loadWildlifeObservations();
+};

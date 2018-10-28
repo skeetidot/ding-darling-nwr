@@ -31,6 +31,12 @@
     <!-- LEAFLET SIDEBAR STYLESHEET -->
     <link rel="stylesheet" href="lib/leaflet-sidebar-v2/css/leaflet-sidebar.css" />
 
+    <!-- LEAFLET DRAW STYLESHEET -->
+    <link rel="stylesheet" href="lib/leaflet-draw/leaflet.draw.css" />
+
+    <!-- JQUERY UI STYLESHEET -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
     <!-- CUSTOM STYLESHEET -->
     <link rel="stylesheet" href="css/style.css">
 
@@ -57,6 +63,8 @@
     <script src="lib/leaflet-sidebar/src/L.Control.Sidebar.js"></script>
     <script src="lib/leaflet-sidebar-v2/js/leaflet-sidebar.js"></script>
 
+    <!-- LEAFLET DRAW -->
+    <script src="lib/leaflet-draw/leaflet.draw.js"></script>
 
     <!-- LEAFLET AWESOME MARKERS -->
     <script src="lib/leaflet.awesome-markers-2.0/dist/leaflet.awesome-markers.js"></script>
@@ -66,7 +74,10 @@
 
     <!-- JQUERY -->
     <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+
+    <!-- JQUERY UI -->
     <script type="text/javascript" src="http://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+
 
 </head>
 
@@ -87,13 +98,14 @@
         <div class="leaflet-sidebar-tabs">
             <ul role="leaflet-tablist">
                 <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
-                <li><a href="#search" role="tab"><i class="fa fa-search"></i></a></li>
-                <li><a href="#submit" role="tab"><i class="fa fa-map-marker-alt"></i></a></li>
+                <li><a href="#searchTab" role="tab"><i class="fa fa-search"></i></a></li>
+                <li><a href="#submitTab" role="tab"><i class="fa fa-map-marker-alt"></i></a></li>
             </ul>
         </div>
 
         <!-- Tab panes -->
         <div class="leaflet-sidebar-content">
+            
             <div class="leaflet-sidebar-pane" id="home">
                 <h1 class="leaflet-sidebar-header">J.N. "Ding" Darling National Wildlife Refuge
                     <span class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></span>
@@ -107,7 +119,8 @@
                 </div>
 
             </div>
-            <div class="leaflet-sidebar-pane" id="search">
+            
+            <div class="leaflet-sidebar-pane" id="searchTab">
                 <h1 class="leaflet-sidebar-header">Filter Points of Interest
                     <span class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
@@ -124,64 +137,71 @@
                         <option value="information">Practical Information</option>
                         <option value="information">Trailheads</option>
                         <option value="information">Scenic Points</option>
-                        <option value="information">Beaches</option>                        
+                        <option value="information">Beaches</option>
                     </select>
 
-                    <!--
-                    <div id="fieldLabel"><label>Distance Decay Coefficient (q):</label></div>
-                    <input type="text" id="distanceDecayCoefficient" value="2">
-
-                    <div id="fieldLabel"><label>Hexbin Size (sq km):</label></div>
-                    <input type="text" id="hexbinArea" value="10">
-
-                    <br><br>
-                    <input id="submitButton" type="submit" value="Submit">
-                    <input id="resetButton" type="submit" value="Reset">
-
-                    <div id="regressionEquationLabel"><label>Regression Equation:</label></div>
-                    <div id="regressionEquation"></div>
-
-                    <div id="rSquaredLabel"><label>R-Squared:</label></div>
-                    <div id="rSquared"></div>
--->
                 </div>
 
             </div>
-            <div class="leaflet-sidebar-pane" id="submit">
+            
+            <div class="leaflet-sidebar-pane" id="submitTab">
                 <h1 class="leaflet-sidebar-header">Submit Wildlife Observations
                     <span class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
                 <p>Submit your own wildlife observations</p>
-                
+
                 <!-- Build UI control-->
                 <div id='ui-controls'>
-                
+
+                    <input id="currentLocationButton" type="button" src="js/main.js" onclick="addPointAtCurrentLocation();" value="Use Current Location">
+                    <input id ="clickPointButton" type="button" src="js/main.js" onclick="startEdits();" value="Click a Point"><br>
+
                     <div id="fieldLabel"><label>Latitude:</label></div>
-                    <input type="text" id="latitude">
-                
+                    <input type="text" id="latitude" disabled>
+
                     <div id="fieldLabel"><label>Longitude:</label></div>
-                    <input type="text" id="longitude">                  
-                
+                    <input type="text" id="longitude" disabled>
+
                     <div id="fieldLabel"><label>Species Family:</label></div>
-                    <select>
+                    <select id="speciesFamilyDropdown">
+                        <option value="default"></option>
                         <option value="birds">Birds</option>
                         <option value="mammals">Mammals</option>
                         <option value="reptiles">Reptiles</option>
                         <option value="insectsArachnids">Insects and Arachnids</option>
-                        <option value="crustaceans">Crustaceans</option>                     
+                        <option value="crustaceans">Crustaceans</option>
                     </select>
-                    
+
                     <div id="fieldLabel"><label>Species:</label></div>
-                    <select>
-                        <option value="TBD">TBD</option>                     
-                    </select>                    
-                
+                    <select id="speciesDropdown">
+                    </select>
+
                     <br><br>
-                    <input id="submitButton" type="submit" value="Submit">
-                    <input id="resetButton" type="submit" value="Reset">
+                    <input id="submitButton" type="submit" value="Submit" onclick="setData();">
+                    <input id="resetButton" type="submit" value="Reset" onclick="cancelData();">
                 </div>
             </div>
+            
         </div>
+    </div>
+    
+    <!-- ADD POINT DIALOG -->
+    <div id="dialog" title="Point Information">
+        <form>
+            <fieldset style="border: none;">
+                <ul style="list-style-type: none; padding-left: 0px">
+
+                    <!-- User Name -->
+                    <li><label for="username">Your Name</label></li>
+                    <li><input type="text" name="username" id="username" placeholder="Enter your name" class="text ui-widget-content ui-corner-all"></li>
+
+                    <!-- Description of the Point -->
+                    <li><label for="description">About this Point</label></li>
+                    <li><input type="text" name="description" id="description" placeholder="Description for this point" class="text ui-widget-content ui-corner-all"></li>
+                </ul>
+                <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+            </fieldset>
+        </form>
     </div>
 
     <!-- LINK TO MAIN JAVASCRIPT-->
