@@ -124,20 +124,21 @@
                 <h1 class="leaflet-sidebar-header">Filter Points of Interest
                     <span class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
+                <p>Filter points of interest by theme</p>
 
                 <!-- Build UI control-->
                 <div id='ui-controls'>
 
-                    <div id="fieldLabel"><label>Feature Type:</label></div>
-                    <select>
+                    <div id="fieldLabel"><label id="filterLabel">Theme:</label></div>
+                    <select id="filterDropdown">
                         <option value="all">All Points of Interest</option>
-                        <option value="drivingTour">Driving Tour</option>
-                        <option value="fishing">Fishing Sites</option>
-                        <option value="boatLaunches">Boat Launches</option>
-                        <option value="information">Practical Information</option>
-                        <option value="information">Trailheads</option>
-                        <option value="information">Scenic Points</option>
-                        <option value="information">Beaches</option>
+                        <option value="visitorCenters">Visitor Centers</option>                   
+                        <option value="drivingTour">Driving</option>
+                        <option value="hiking">Hiking</option>                        
+                        <option value="fishingBoating">Fishing and Boating</option>
+                        <option value="picnicking">Picnicking</option>
+                        <option value="beaches">Beaches</option>
+                        <option value="insideThePark">Inside the Park</option>
                     </select>
 
                 </div>
@@ -184,25 +185,7 @@
             
         </div>
     </div>
-    
-    <!-- ADD POINT DIALOG -->
-    <div id="dialog" title="Point Information">
-        <form>
-            <fieldset style="border: none;">
-                <ul style="list-style-type: none; padding-left: 0px">
 
-                    <!-- User Name -->
-                    <li><label for="username">Your Name</label></li>
-                    <li><input type="text" name="username" id="username" placeholder="Enter your name" class="text ui-widget-content ui-corner-all"></li>
-
-                    <!-- Description of the Point -->
-                    <li><label for="description">About this Point</label></li>
-                    <li><input type="text" name="description" id="description" placeholder="Description for this point" class="text ui-widget-content ui-corner-all"></li>
-                </ul>
-                <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
-            </fieldset>
-        </form>
-    </div>
 
     <!-- LINK TO MAIN JAVASCRIPT-->
     <script src="js/plugins.js"></script>

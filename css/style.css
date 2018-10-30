@@ -2,29 +2,6 @@
 
 /* CSS TO STYLE THE WHOLE PAGE */
 
-/*
-html,
-body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
-    font-family: "Roboto", "Open Sans", sans-serif;
-    overflow-y: hidden;
-    overflow-x: hidden;
-    background-color: #426230;    
-}
-
-#map {
-    position: absolute;
-    top: 3rem;
-    bottom: 0;
-    right: 0;
-    width: 100%;
-    font-family: "Roboto", "Open Sans", sans-serif;
-}
-*/
-
 html,
 body,
 #map {
@@ -51,63 +28,6 @@ p {
     font-size: 1.1em;
 }
 
-/*
-#header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 3rem;
-    background-color: #426230;
-    z-index: 100;
-}
-
-h1 {
-    font-size: 1.5em;
-    padding-left: 60px;
-    padding-top: 7px;
-    margin: 0 0 0 0;
-    color: #F8F4F0;
-    font-weight: 400;
-}
-*/
-
-/**********************************************************************/
-
-/* CSS FOR PHONE SCREEN SIZES (500px OR LESS) */
-
-/*
-@media (max-width: 500px) {
-    h1 {
-        font-size: 100%;
-        padding-left: 60px;
-        padding-top: 7px;
-        margin: 0 0 0 0;
-        color: #F8F4F0;
-        font-weight: 400;
-    }
-
-    #phone-header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 3rem;
-        background-color: #426230;
-        z-index: 100;
-    }
-
-    #map {
-        position: absolute;
-        top: 3rem;
-        bottom: 0;
-        right: 0;
-        width: 100%;
-        font-family: "Roboto", "Open Sans", sans-serif;
-    }
-}
-*/
-
 
 /**********************************************************************/
 
@@ -117,7 +37,7 @@ h1 {
     padding-top: 0px;
 }
 
-#ui-controls #fieldLabel {
+#ui-controls #fieldLabel, #filterLabel {
     font-size: 1.25em;
     font-weight: bold;
     margin-top: 5px;

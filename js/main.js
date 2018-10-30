@@ -49,7 +49,7 @@ var bounds = [[26.421850916199865, -82.30390548706056],
               [26.512515912899676, -81.97431564331055]]
 
 
-// Initialize the list of common species for each species group
+// Initialize the list of common species for each species family
 var speciesJsonList = {
     
     "Birds" : 
@@ -165,23 +165,52 @@ var speciesJsonList = {
     ]    
 };
 
-var updateSpeciesDropdown = function (speciesGroup) {
-    console.log('updating with', speciesGroup);
+
+// Create a variable to store the species family dropdown
+var speciesFamilyDropdown = $("#speciesFamilyDropdown")
+console.log(speciesFamilyDropdown);
+
+
+// Update the species dropdown when the user selects a species family
+speciesFamilyDropdown.on('change', function () {
+    console.log("species family dropdown changed");
+    
+    // Create a variable to store the selected species family
+    var selectedSpeciesFamily = $("#speciesFamilyDropdown option:selected").text();
+    console.log(selectedSpeciesFamily);
+    
+    // Update the species dropdown based on the selected species family
+    updateSpeciesDropdown(selectedSpeciesFamily);
+});
+
+
+// Function to update the species dropdown based on the selected species family
+var updateSpeciesDropdown = function (speciesFamily) {
+    console.log('updating with', speciesFamily);
     var listItems = "";
-    for (var i = 0; i < speciesJsonList[speciesGroup].length; i++) {
-        listItems += "<option value='" + speciesJsonList[speciesGroup][i].species + "'>" + speciesJsonList[speciesGroup][i].species + "</option>";
+    for (var i = 0; i < speciesJsonList[speciesFamily].length; i++) {
+        listItems += "<option value='" + speciesJsonList[speciesFamily][i].species + "'>" + speciesJsonList[speciesFamily][i].species + "</option>";
     }
     $("#ui-controls #speciesDropdown").html(listItems);
 }
 
-var speciesFamilyDropdown = $("#speciesFamilyDropdown")
-console.log(speciesFamilyDropdown);
 
-speciesFamilyDropdown.on('change',function(){
-    console.log("species family dropdown changed");
-    var selectedSpeciesGroup = $("#speciesFamilyDropdown option:selected").text();
-    console.log(selectedSpeciesGroup);
-    updateSpeciesDropdown(selectedSpeciesGroup);
+// Create a variable to store the filter by theme dropdown
+var filterByThemeDropdown = $("#filterDropdown");
+console.log(filterByThemeDropdown);
+
+
+// Update the species dropdown when the user selects a species family
+filterByThemeDropdown.on('change', function () {
+    console.log("filter by theme dropdown changed");
+    
+    // Create a variable to store the value of the selected theme
+    var selectedTheme = $("#filterDropdown option:selected").val();
+    console.log(selectedTheme);
+    
+    // Update the points of interest based on the selected theme
+    filterPointsOfInterest(selectedTheme);
+    
 });
 
 // Initialize global variables for icons
@@ -259,7 +288,7 @@ var restroomIcon = L.icon({
     iconUrl: "icons/18_restroom.png"
 });
 
-// Create a marker for a restroom
+// Create a marker for a pavilion
 var pavilionIcon = L.icon({
     iconUrl: "icons/19_pavilion.png"
 });
@@ -288,7 +317,7 @@ var cartoUserName = "lewinkler2";
 
 // SQL queries to get all features from each layer
 var sqlQueryRefugeBoundary = "SELECT * FROM refuge_boundary",
-    sqlQueryRoads = "SELECT * FROM roads WHERE f_class IN (1, 2)",
+    sqlQueryRoads = "SELECT * FROM roads WHERE f_class IN (1, 2)", // all public roads
     sqlQueryTrails = "SELECT * FROM trails",
     sqlQueryTrailFeatures = "SELECT * FROM trail_features WHERE feature_type IN ('Bench', 'Sign', 'Bridge')",
     sqlQueryParkingLots = "SELECT * FROM parking_lots",
@@ -296,6 +325,10 @@ var sqlQueryRefugeBoundary = "SELECT * FROM refuge_boundary",
     sqlQueryeBirdHotspots = "SELECT * FROM ebird_hotspots",
     sqlQueryWildlifeObservations = "SELECT * from wildlife_observations_collector";
 
+
+// Initialize a SQL query for the filtered visitor service features
+// Set the initial value to show all features
+var sqlQueryFilteredVisitorServiceFeatures = sqlQueryVisitorServiceFeatures;
 
 
 // Set the basemap for the layer list
@@ -397,7 +430,7 @@ $(document).ready(function () {
     loadRoads();
     loadTrails();
     loadTrailFeatures();
-    loadVisitorServiceFeatures();
+    loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures);
     loadeBirdHotspots();
     loadWildlifeObservations();
     loadParkingLots();
@@ -722,17 +755,37 @@ function loadTrailFeatures() {
 
 
 // Function to load the refuge visitor service features (points of interest) onto the map
-function loadVisitorServiceFeatures() {
+function loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures) {
 
     // If the layer is already shown on the map, remove it
     if (map.hasLayer(visitorServiceFeatures)) {
         map.removeLayer(visitorServiceFeatures);
     }
+    
+//    var layerControl = $('.leaflet-control-layers-overlays');
+//    
+//    console.log(layerControl);
+//    
+//    // use jQuery to listen for checkbox change event
+//    layerControl.on('change', function () {
+//        
+//        console.log(this);
+        
+//        var checkbox = $(this);
+//        var layer = checkbox.data().layer;
+//
+//        // toggle the layer
+//        if (checkbox): is('checked') {
+//            map.addLayer(layer);
+//        } else {
+//            map.removeLayer(layer);
+//        }
+
+//    });
 
     // Run the specified sqlQuery from CARTO, return it as a JSON, convert it to a Leaflet GeoJson, and add it to the map with a popup
-
     // For the data source, enter the URL that goes to the SQL API, including our username and the SQL query
-    $.getJSON("https://" + cartoUserName + ".carto.com/api/v2/sql?format=GeoJSON&q=" + sqlQueryVisitorServiceFeatures, function (data) {
+    $.getJSON("https://" + cartoUserName + ".carto.com/api/v2/sql?format=GeoJSON&q=" + sqlQueryFilteredVisitorServiceFeatures, function (data) {
 
         // Convert the JSON to a Leaflet GeoJson
         visitorServiceFeatures = L.geoJson(data, {
@@ -753,7 +806,7 @@ function loadVisitorServiceFeatures() {
             // Loop through each feature
             onEachFeature: function (feature, layer) {
 
-                // Bind the nameto a popup
+                // Bind the name to a popup
                 layer.bindPopup(feature.properties.name);
 
             }
@@ -891,6 +944,118 @@ function loadWildlifeObservations() {
 }
 
 
+// Function to filter the points of interest based on the selected theme
+function filterPointsOfInterest(selectedTheme) {
+
+    console.log("Selected Theme: " + selectedTheme);
+
+    // All Points of Interest
+    if (selectedTheme == "all") {
+
+        // Update the SQL query to the one showing all features
+        sqlQueryFilteredVisitorServiceFeatures = sqlQueryVisitorServiceFeatures;
+
+        console.log(sqlQueryFilteredVisitorServiceFeatures);
+
+        // Reload the points of interest
+        loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures);
+    }
+    
+    // Practical Information
+    else if (selectedTheme == "visitorCenters") {
+
+        // Update the SQL query to the one showing all visitor centers
+        // 11 - information/visitor center     
+        sqlQueryFilteredVisitorServiceFeatures = "SELECT * FROM visitor_service_features WHERE category IN (11)";
+
+        // Reload the points of interest
+        loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures);
+    }       
+
+    // Driving
+    else if (selectedTheme == "drivingTour") {
+
+        // Update the SQL query to the one showing driving attractions
+        //  4 - driving tour entry and exit
+        // 11 - information/visitor center
+        // 14 - scenic viewpoint       
+        // 15 - observation deck
+        // 16 - parking
+        // 23 - lighthouse
+        sqlQueryFilteredVisitorServiceFeatures = "SELECT * FROM visitor_service_features WHERE category IN (4, 11, 14, 15, 16, 23)";
+
+        // Reload the points of interest
+        loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures);
+    }
+
+    // Hiking
+    else if (selectedTheme == "hiking") {
+
+        // Update the SQL query to the one showing hiking features
+        // 12 - interpretive sign
+        // 14 - scenic viewpoint
+        // 15 - observation deck
+        // 18 - restroom
+        // 19 - pavilion
+        // 20 - trailhead
+        sqlQueryFilteredVisitorServiceFeatures = "SELECT * FROM visitor_service_features WHERE category IN (12, 14, 15, 18, 19, 20)";
+
+        // Reload the points of interest
+        loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures);
+    }
+
+    // Fishing and Boating
+    else if (selectedTheme == "fishingBoating") {
+
+        // Update the SQL query to the one showing fishing and boating features
+        // 5 - fishing site
+        // 6 - fishing pier
+        // 8 - hand launch / small boat launch
+        sqlQueryFilteredVisitorServiceFeatures = "SELECT * FROM visitor_service_features WHERE category IN (5, 6, 8)";
+
+        // Reload the points of interest
+        loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures);
+    }
+    
+    // Picnicking
+    else if (selectedTheme == "picnicking") {
+
+        // Update the SQL query to the one showing picnic areas
+        // 17 - picnic area
+        sqlQueryFilteredVisitorServiceFeatures = "SELECT * FROM visitor_service_features WHERE category IN (17)";
+
+        // Reload the points of interest
+        loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures);
+    }
+    
+    // Beaches
+    else if (selectedTheme == "beaches") {
+
+        // Update the SQL query to the one showing picnic areas
+        // 35 - beach access
+        sqlQueryFilteredVisitorServiceFeatures = "SELECT * FROM visitor_service_features WHERE category IN (35)";
+        
+        console.log(sqlQueryFilteredVisitorServiceFeatures);
+
+        // Reload the points of interest
+        loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures);
+    }
+    
+    // Inside the Park
+    else if (selectedTheme == "insideThePark") {
+
+        // Update the SQL query to the one showing features inside the park
+        sqlQueryFilteredVisitorServiceFeatures = "SELECT visitor_service_features.name, visitor_service_features.category, visitor_service_features.the_geom FROM visitor_service_features, refuge_boundary WHERE ST_Intersects(visitor_service_features.the_geom, refuge_boundary.the_geom)";
+        
+        console.log(sqlQueryFilteredVisitorServiceFeatures);
+
+        // Reload the points of interest
+        loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures);
+    }
+
+}
+
+
 // Function that will run when the location of the user is found
 function locationFound(e) {
 
@@ -907,9 +1072,9 @@ function locationFound(e) {
 
         // Reset the map to the refuge bounds
         map.fitBounds(bounds);
-        
+
         // Disable the Use Current Location button, so observations can only be submitted by clicking a point
-        $('#ui-controls #currentLocationButton').attr("disabled", true);         
+        $('#ui-controls #currentLocationButton').attr("disabled", true);
 
     } else {
 
@@ -931,7 +1096,6 @@ function locationFound(e) {
 
     }
 }
-
 
 // Function that will run if the location of the user is not found
 function locationNotFound(e) {
@@ -1009,7 +1173,6 @@ function addPointAtCurrentLocation() {
     $('#ui-controls #latitude').val(latitude);
     $('#ui-controls #longitude').val(longitude);
     
-
     // Add the new layer to the drawnItems feature group
     drawnItems.addLayer(locationMarker);
 
@@ -1023,6 +1186,7 @@ function addPointAtCurrentLocation() {
 
 
 // Function to run when a feature is drawn on the map
+// Add the feature to the drawnItems layer and get its coordinates
 map.on('draw:created', function (e) {
 
     // Remove the point tool
@@ -1125,6 +1289,7 @@ var submitToProxy = function (q) {
         refreshLayer();
     });
 };
+
 
 // Function to refresh the layers to show the updated dataset
 function refreshLayer() {
