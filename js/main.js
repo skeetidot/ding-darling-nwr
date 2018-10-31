@@ -168,16 +168,13 @@ var speciesJsonList = {
 
 // Create a variable to store the species family dropdown
 var speciesFamilyDropdown = $("#speciesFamilyDropdown")
-console.log(speciesFamilyDropdown);
 
 
 // Update the species dropdown when the user selects a species family
 speciesFamilyDropdown.on('change', function () {
-    console.log("species family dropdown changed");
     
     // Create a variable to store the selected species family
     var selectedSpeciesFamily = $("#speciesFamilyDropdown option:selected").text();
-    console.log(selectedSpeciesFamily);
     
     // Update the species dropdown based on the selected species family
     updateSpeciesDropdown(selectedSpeciesFamily);
@@ -197,16 +194,13 @@ var updateSpeciesDropdown = function (speciesFamily) {
 
 // Create a variable to store the filter by theme dropdown
 var filterByThemeDropdown = $("#filterDropdown");
-console.log(filterByThemeDropdown);
 
 
 // Update the species dropdown when the user selects a species family
 filterByThemeDropdown.on('change', function () {
-    console.log("filter by theme dropdown changed");
     
     // Create a variable to store the value of the selected theme
     var selectedTheme = $("#filterDropdown option:selected").val();
-    console.log(selectedTheme);
     
     // Update the points of interest based on the selected theme
     filterPointsOfInterest(selectedTheme);
@@ -461,10 +455,6 @@ $(window).resize(function () {
     getResponsiveDisplay();
 
 });
-
-
-// Set the current location to the point clicked on the map
-//map.on('click', locationFound);
 
 
 // Map Event Listener listening for when the user location is found
@@ -762,26 +752,9 @@ function loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures) {
         map.removeLayer(visitorServiceFeatures);
     }
     
-//    var layerControl = $('.leaflet-control-layers-overlays');
-//    
-//    console.log(layerControl);
-//    
-//    // use jQuery to listen for checkbox change event
-//    layerControl.on('change', function () {
-//        
-//        console.log(this);
-        
-//        var checkbox = $(this);
-//        var layer = checkbox.data().layer;
-//
-//        // toggle the layer
-//        if (checkbox): is('checked') {
-//            map.addLayer(layer);
-//        } else {
-//            map.removeLayer(layer);
-//        }
-
-//    });
+    // Clear the contents of the visitor service features layer group
+    // so it can be redrawn with the filtered set
+    visitorServiceFeaturesLayerGroup.clearLayers();
 
     // Run the specified sqlQuery from CARTO, return it as a JSON, convert it to a Leaflet GeoJson, and add it to the map with a popup
     // For the data source, enter the URL that goes to the SQL API, including our username and the SQL query
@@ -955,8 +928,6 @@ function filterPointsOfInterest(selectedTheme) {
         // Update the SQL query to the one showing all features
         sqlQueryFilteredVisitorServiceFeatures = sqlQueryVisitorServiceFeatures;
 
-        console.log(sqlQueryFilteredVisitorServiceFeatures);
-
         // Reload the points of interest
         loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures);
     }
@@ -1034,8 +1005,6 @@ function filterPointsOfInterest(selectedTheme) {
         // Update the SQL query to the one showing picnic areas
         // 35 - beach access
         sqlQueryFilteredVisitorServiceFeatures = "SELECT * FROM visitor_service_features WHERE category IN (35)";
-        
-        console.log(sqlQueryFilteredVisitorServiceFeatures);
 
         // Reload the points of interest
         loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures);
@@ -1052,6 +1021,17 @@ function filterPointsOfInterest(selectedTheme) {
         // Reload the points of interest
         loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures);
     }
+    
+    // Within 0.25 miles from current location
+    else if (selectedTheme == "nearby") {
+        
+        var sqlQueryFilteredVisitorServiceFeatures = "SELECT * FROM visitor_service_features WHERE ST_Distance_Sphere(the_geom, ST_MakePoint(" + myLocation.lng + "," + myLocation.lat + ")) <= 1609.34 * 0.5";
+        
+        console.log(sqlQueryFilteredVisitorServiceFeatures);
+        
+        // Reload the points of interest
+        loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures);        
+    }
 
 }
 
@@ -1061,8 +1041,6 @@ function locationFound(e) {
 
     // Get the current location
     myLocation = e.latlng;
-
-    console.log(myLocation);
 
     // If the current location is outside the bounds of the map, reset the map to the refuge bounds
     if (myLocation.lat < bounds[0][0] || myLocation.lat > bounds[1][0] ||
@@ -1076,9 +1054,11 @@ function locationFound(e) {
         // Disable the Use Current Location button, so observations can only be submitted by clicking a point
         $('#ui-controls #currentLocationButton').attr("disabled", true);
 
+    
+    // The current location is within the bounds of the map
     } else {
 
-        // Remove locationMarker if it's already on the map
+        // Remove the locationMarker if it's already on the map
         if (map.hasLayer(locationMarker)) {
             map.removeLayer(locationMarker);
         }
@@ -1093,9 +1073,13 @@ function locationFound(e) {
 
         // Add the location marker to the map
         locationMarker.addTo(map);
+        
+        var nearbyTheme = $('<option value="nearby">Within 1/2 mile of my location</option>');
+        $('#filterDropdown').append(nearbyTheme);
 
     }
 }
+
 
 // Function that will run if the location of the user is not found
 function locationNotFound(e) {
