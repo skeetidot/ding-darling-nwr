@@ -1105,10 +1105,28 @@ function locationFound(e) {
 
         // Add the location marker to the map
         locationMarker.addTo(map);
-        
-        var nearbyTheme = $('<option value="nearby">Within 1/2 mile of my location</option>');
-        $('#filterDropdown').append(nearbyTheme);
 
+        // Initialize a variable to store an array of filter dropdown values
+        var filterDropdownArray = [];
+
+        // Loop through the existing filter dropdown values
+        $('#filterDropdown > option').each(function () {
+            
+            // Get the current value
+            var value = $(this).val();
+            
+            // Push it into the filter dropdown array
+            filterDropdownArray.push(value);
+
+        });
+
+        // Initialize a new dropdown value for the nearby filter value
+        var nearbyTheme = $('<option value="nearby">Within 1/2 mile of my location</option>');
+
+        // If the filter dropdown array does not yet include the nearby filter, add it
+        if (!filterDropdownArray.includes("nearby")) {
+            $('#filterDropdown').append(nearbyTheme);
+        }
     }
 }
 
