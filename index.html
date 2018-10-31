@@ -100,12 +100,13 @@
                 <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
                 <li><a href="#searchTab" role="tab"><i class="fa fa-search"></i></a></li>
                 <li><a href="#submitTab" role="tab"><i class="fa fa-map-marker-alt"></i></a></li>
+                <li><a href="#legendTab" role="tab"><i class="fa fa-list"></i></a></li>
             </ul>
         </div>
 
         <!-- Tab panes -->
         <div class="leaflet-sidebar-content">
-            
+
             <div class="leaflet-sidebar-pane" id="home">
                 <h1 class="leaflet-sidebar-header">J.N. "Ding" Darling National Wildlife Refuge
                     <span class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></span>
@@ -119,7 +120,7 @@
                 </div>
 
             </div>
-            
+
             <div class="leaflet-sidebar-pane" id="searchTab">
                 <h1 class="leaflet-sidebar-header">Filter Points of Interest
                     <span class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></span>
@@ -132,9 +133,9 @@
                     <div id="fieldLabel"><label id="filterLabel">Theme:</label></div>
                     <select id="filterDropdown">
                         <option value="all">All Points of Interest</option>
-                        <option value="visitorCenters">Visitor Centers</option>                   
+                        <option value="visitorCenters">Visitor Centers</option>
                         <option value="drivingTour">Driving</option>
-                        <option value="hiking">Hiking</option>                        
+                        <option value="hiking">Hiking</option>
                         <option value="fishingBoating">Fishing and Boating</option>
                         <option value="picnicking">Picnicking</option>
                         <option value="beaches">Beaches</option>
@@ -144,7 +145,7 @@
                 </div>
 
             </div>
-            
+
             <div class="leaflet-sidebar-pane" id="submitTab">
                 <h1 class="leaflet-sidebar-header">Submit Wildlife Observations
                     <span class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></span>
@@ -155,7 +156,7 @@
                 <div id='ui-controls'>
 
                     <input id="currentLocationButton" type="button" src="js/main.js" onclick="addPointAtCurrentLocation();" value="Use Current Location">
-                    <input id ="clickPointButton" type="button" src="js/main.js" onclick="startEdits();" value="Click a Point"><br>
+                    <input id="clickPointButton" type="button" src="js/main.js" onclick="startEdits();" value="Click a Point"><br>
 
                     <div id="fieldLabel"><label>Latitude:</label></div>
                     <input type="text" id="latitude" disabled>
@@ -169,6 +170,7 @@
                         <option value="birds">Birds</option>
                         <option value="mammals">Mammals</option>
                         <option value="reptiles">Reptiles</option>
+                        <option value="amphibians">Amphibians</option>
                         <option value="insectsArachnids">Insects and Arachnids</option>
                         <option value="crustaceans">Crustaceans</option>
                     </select>
@@ -182,7 +184,130 @@
                     <input id="resetButton" type="submit" value="Reset" onclick="cancelData();">
                 </div>
             </div>
-            
+
+            <div class="leaflet-sidebar-pane" id="legendTab">
+                <h1 class="leaflet-sidebar-header">Legend
+                    <span class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></span>
+                </h1>
+
+                <div id='ui-controls'>
+                    <div id="fieldLabel">Points of Interest</div>
+
+                    <div id="legendItem">
+                        <img src="icons/4_driving_tour.png" alt="Driving Tour">
+                        <span class="legendText">Driving Tour Entrance and Exit</span>
+                    </div>
+
+                    <div id="legendItem">
+                        <img src="icons/5_fishing.png" alt="Fishing">
+                        <span class="legendText">Fishing Area</span>
+                    </div>
+
+                    <div id="legendItem">
+                        <img src="icons/6_fishing_pier.png" alt="Fishing Pier">
+                        <span class="legendText">Fishing Pier</span>
+                    </div>
+
+                    <div id="legendItem">
+                        <img src="icons/8_hand_launch_small_boat_launch.png" alt="Hand Launch / Small Boat Launch">
+                        <span class="legendText">Hand Launch / Small Boat Launch </span>
+                    </div>
+
+                    <div id="legendItem">
+                        <img src="icons/11_information.png" alt="Visitor Center / Information">
+                        <span class="legendText">Visitor Center / Information</span>
+                    </div>
+
+                    <div id="legendItem">
+                        <img src="icons/12_interpretive_sign.png" alt="Interpretive Sign">
+                        <span class="legendText">Interpretive Sign</span>
+                    </div>
+
+                    <div id="legendItem">
+                        <img src="icons/14_scenic_viewpoint.png" alt="Scenic Viewpoint">
+                        <span class="legendText">Scenic Viewpoint</span>
+                    </div>
+
+                    <div id="legendItem">
+                        <img src="icons/15_observation_deck.png" alt="Observation Deck">
+                        <span class="legendText">Observation Deck</span>
+                    </div>
+
+                    <div id="legendItem">
+                        <img src="icons/16_parking.png" alt="Parking">
+                        <span class="legendText">Parking</span>
+                    </div>
+
+                    <div id="legendItem">
+                        <img src="icons/17_picnic_area.png" alt="Picnic Area">
+                        <span class="legendText">Picnic Area</span>
+                    </div>
+
+                    <div id="legendItem">
+                        <img src="icons/18_restroom.png" alt="Restroom">
+                        <span class="legendText">Restroom</span>
+                    </div>
+
+                    <div id="legendItem">
+                        <img src="icons/19_pavilion.png" alt="Pavilion">
+                        <span class="legendText">Pavilion</span>
+                    </div>
+
+                    <div id="legendItem">
+                        <img src="icons/20_trailhead.png" alt="Trailhead">
+                        <span class="legendText">Trailhead</span>
+                    </div>
+
+                    <div id="legendItem">
+                        <img src="icons/23_lighthouse.png" alt="Lighthouse">
+                        <span class="legendText">Lighthouse</span>
+                    </div>
+
+                    <div id="legendItem">
+                        <img src="icons/35_beach_access.png" alt="Beach">
+                        <span class="legendText">Beach</span>
+                    </div>
+
+                    <div id="fieldLabel">eBird Hotspots</div>
+                    <div id="legendItem">
+                        <img src="icons/ebird_hotspots.png" alt="Driving Tour">
+                        <span class="legendText"></span>
+                    </div>
+                    
+                    <div id="fieldLabel">Wildlife Observations</div>
+                    <div id="legendItem">
+                        <img src="icons/birds.png" alt="Birds">
+                        <span class="legendText">Birds</span>
+                    </div>
+
+                    <div id="legendItem">
+                        <img src="icons/mammals.png" alt="Mammals">
+                        <span class="legendText">Mammals</span>
+                    </div>
+
+                    <div id="legendItem">
+                        <img src="icons/reptiles.png" alt="Reptiles">
+                        <span class="legendText">Reptiles</span>
+                    </div>
+
+                    <div id="legendItem">
+                        <img src="icons/amphibians.png" alt="Amphibians">
+                        <span class="legendText">Amphibians</span>
+                    </div>
+
+                    <div id="legendItem">
+                        <img src="icons/insects_arachnids.png" alt="Insects and Arachnids">
+                        <span class="legendText">Insects and Arachnids</span>
+                    </div>  
+
+                    <div id="legendItem">
+                        <img src="icons/crustaceans.png" alt="Crustaceans">
+                        <span class="legendText">Crustaceans</span>
+                    </div>                    
+                </div>
+
+            </div>
+
         </div>
     </div>
 

@@ -183,11 +183,18 @@ speciesFamilyDropdown.on('change', function () {
 
 // Function to update the species dropdown based on the selected species family
 var updateSpeciesDropdown = function (speciesFamily) {
-    console.log('updating with', speciesFamily);
+    
+    // Initialize a variable to store the species list
     var listItems = "";
+    
+    // Loop through the list of species for the selected species family
     for (var i = 0; i < speciesJsonList[speciesFamily].length; i++) {
+        
+        // Add a new <option> value for the current species
         listItems += "<option value='" + speciesJsonList[speciesFamily][i].species + "'>" + speciesJsonList[speciesFamily][i].species + "</option>";
     }
+    
+    // Add the species list to the species dropdown
     $("#ui-controls #speciesDropdown").html(listItems);
 }
 
@@ -865,10 +872,9 @@ function getVisitorServiceIcon(category) {
         return lighthouseIcon;
     } else if (category == 35) {
         return beachAccessIcon;
-    } else if (category == 99) {
-        return tarponBayExplorersIcon;
+    } else {
+        return scenicViewpointIcon; // default option if there is no valid category, should not be used
     }
-
 }
 
 
@@ -890,8 +896,12 @@ function loadWildlifeObservations() {
 
             // Create a style for the points
             pointToLayer: function (feature, latlng) {
+                
+                // Get the species family to use to set its marker color
+                var speciesFamily = feature.properties.species_family;
+                
                 return L.circleMarker(latlng, {
-                    fillColor: '#FF1493',
+                    fillColor: getWildlifeObservationMarkerColor(speciesFamily),
                     fillOpacity: 1,
                     color: '#3d3d3d',
                     weight: 0.25,
@@ -913,6 +923,28 @@ function loadWildlifeObservations() {
         }).addTo(wildlifeObservationsLayerGroup);
 
     });
+
+}
+
+
+// Function to get the color for each wildlife observation marker based on its species family
+function getWildlifeObservationMarkerColor(speciesFamily) {
+
+    if (speciesFamily == "Birds") {
+        return '#ff69b4';
+    } else if (speciesFamily == "Mammals") {
+        return '#e31a1c';
+    } else if (speciesFamily == "Reptiles") {
+        return '#ffff99';
+    } else if (speciesFamily == "Amphibians") {
+        return '#33a02c';
+    } else if (speciesFamily == "Insects and Arachnids") {
+        return '#3d3d3d';
+    } else if (speciesFamily == "Crustaceans") {
+        return '#1f78b4';
+    } else {
+        return 'white'; // default option if there is no valid species family, should not be used
+    }
 
 }
 
@@ -1233,7 +1265,7 @@ function setData() {
 
         // Submit the SQL statement to the PHP proxy, so it can be added to the database without exposing the CARTO API key
         submitToProxy(pURL);
-        console.log("Feature has been submitted to the Proxy");
+        console.log("Feature has been submitted to the proxy");
     });
 
     // Remove the drawn items layer from the map
@@ -1241,7 +1273,6 @@ function setData() {
 
     // Create a new empty drawnItems feature group to capture the next user-drawn data
     drawnItems = new L.FeatureGroup();
-    console.log("drawnItems has been cleared");
 
 };
 

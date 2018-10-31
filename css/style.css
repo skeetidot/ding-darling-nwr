@@ -75,24 +75,23 @@ p {
 
 /**********************************************************************/
 
-/* CSS FOR THE REGRESSION EQUATION AND R-SQUARED LABELS */
+/* CSS FOR THE LEGEND */
 
-#regressionEquationLabel {
-    font-size: 1.25em;
-    font-weight: bold;
-    margin-top: 10px; 
+#legendItem {
+    line-height: 1.4em;
+    padding-top: 5px;
 }
 
-#rSquaredLabel {
-    font-size: 1.25em;
-    font-weight: bold;
-    margin-top: 10px;   
+#ui-controls .legendText {
+    font-size: 1.1em;
+    vertical-align: middle;
+    padding-left: 2px;
 }
-
 
 /************************************************************/
 
 /* CSS RELATED TO THE LEGEND */
+/*
 
 .legend {
     padding: 6px 8px;
@@ -127,6 +126,7 @@ p {
     display: block;
     clear: both;
 }
+*/
 
 
 /**********************************************************************/
