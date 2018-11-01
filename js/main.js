@@ -1179,7 +1179,7 @@ function locationNotFound(e) {
 
 // Function to add the draw control to the map to start editing
 function startEdits() {
-    
+
     // Remove the drawnItems layer from the map
     map.removeLayer(drawnItems);
     
