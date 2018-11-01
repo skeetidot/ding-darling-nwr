@@ -54,6 +54,7 @@ var speciesJsonList = {
     
     "Birds" : 
     [
+        {"species" : ""},
         {"species" : "Anhinga"},
         {"species" : "Belted Kingfisher"},
         {"species" : "Black-bellied Plover"},
@@ -105,6 +106,7 @@ var speciesJsonList = {
     ],
     "Mammals" : 
     [
+        {"species" : ""},
         {"species" : "Bobcat"},
         {"species" : "Bottlenose Dolphin"},
         {"species" : "Coyote"},
@@ -117,6 +119,7 @@ var speciesJsonList = {
     ],
     "Reptiles" : 
     [
+        {"species" : ""},
         {"species" : "American Alligator"},
         {"species" : "Black Racer"},
         {"species" : "Brown Anole Lizard"},
@@ -137,6 +140,7 @@ var speciesJsonList = {
     ],
     "Amphibians" : 
     [
+        {"species" : ""},
         {"species" : "Cuban Tree Frog"},
         {"species" : "Pig Frog"},
         {"species" : "Southern Leopard Frog"},
@@ -144,6 +148,7 @@ var speciesJsonList = {
     ],
     "Insects and Arachnids" : 
     [
+        {"species" : ""},
         {"species" : "Blue Ceraunus Butterfly"},
         {"species" : "Cloudless Sulphur Butterfly"},
         {"species" : "Giant Swallowtail Butterfly"},
@@ -159,6 +164,7 @@ var speciesJsonList = {
     ],
     "Crustaceans" : 
     [
+        {"species" : ""},
         {"species" : "Fiddler Crab"},
         {"species" : "Horseshoe Crab"},
         {"species" : "Mangrove Tree Crab"}
@@ -166,18 +172,28 @@ var speciesJsonList = {
 };
 
 
-// Create a variable to store the species family dropdown
+// Create variables to store the species family and species dropdowns
 var speciesFamilyDropdown = $("#speciesFamilyDropdown")
+var speciesDropdown = $("#speciesDropdown")
+
+
+// Initialize global variables to hold the selected species family and species
+var selectedSpeciesFamily,
+    selectedSpecies;
 
 
 // Update the species dropdown when the user selects a species family
 speciesFamilyDropdown.on('change', function () {
     
     // Create a variable to store the selected species family
-    var selectedSpeciesFamily = $("#speciesFamilyDropdown option:selected").text();
+    selectedSpeciesFamily = $("#speciesFamilyDropdown option:selected").text();
     
     // Update the species dropdown based on the selected species family
     updateSpeciesDropdown(selectedSpeciesFamily);
+    
+    // Enable the Submit button if the required fields are populated
+    checkForRequiredFields();
+    
 });
 
 
@@ -187,16 +203,29 @@ var updateSpeciesDropdown = function (speciesFamily) {
     // Initialize a variable to store the species list
     var listItems = "";
     
-    // Loop through the list of species for the selected species family
-    for (var i = 0; i < speciesJsonList[speciesFamily].length; i++) {
+    // If a species family is selected (excluding default value)
+    if (selectedSpeciesFamily !== "") {
         
-        // Add a new <option> value for the current species
-        listItems += "<option value='" + speciesJsonList[speciesFamily][i].species + "'>" + speciesJsonList[speciesFamily][i].species + "</option>";
+        // Loop through the list of species for the selected species family
+        for (var i = 0; i < speciesJsonList[speciesFamily].length; i++) {
+
+            // Add a new <option> value for the current species
+            listItems += "<option value='" + speciesJsonList[speciesFamily][i].species + "'>" + speciesJsonList[speciesFamily][i].species + "</option>";
+        }        
     }
-    
+
     // Add the species list to the species dropdown
     $("#ui-controls #speciesDropdown").html(listItems);
 }
+
+
+// When the user selects a species, check to enable the Submit button 
+speciesDropdown.on('change', function () {
+    
+    // Enable the Submit button if the required fields are populated
+    checkForRequiredFields();
+    
+});
 
 
 // Create a variable to store the filter by theme dropdown
@@ -395,7 +424,7 @@ var drawControl = new L.Control.Draw({
     // Disable editing and deleting points
     edit: false,
     remove: false,
-    position: 'topright'
+    position: 'bottomright'
 });
 
 
@@ -913,8 +942,6 @@ function loadWildlifeObservations() {
             // Loop through each feature
             onEachFeature: function (feature, layer) {
 
-                console.log(feature.properties.species);
-
                 // Bind the nameto a popup
                 layer.bindPopup(feature.properties.species);
 
@@ -1064,6 +1091,13 @@ function filterPointsOfInterest(selectedTheme) {
         // Reload the points of interest
         loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures);        
     }
+    
+    // If the screen width is less than 800 pixels
+    if (screen.width < 800) {
+        
+        // Collapse the sidebar
+        sidebar.close();        
+    }
 
 }
 
@@ -1149,11 +1183,12 @@ function startEdits() {
     // Remove the drawnItems layer from the map
     map.removeLayer(drawnItems);
     
+    // Create a new empty drawnItems feature group to capture the next user-drawn data
+    drawnItems = new L.FeatureGroup();  
+    
     // Clear the latitude and longitude textboxes
     $('#ui-controls #latitude').val("");
-    $('#ui-controls #longitude').val("");   
-    $('#speciesFamilyDropdown').val('default').attr('selected');
-    $('#speciesDropdown').val('default').attr('selected');    
+    $('#ui-controls #longitude').val("");      
 
     // If the draw control is already on the map remove it and set the controlOnMap flag back to false
     if (controlOnMap == true) {
@@ -1189,9 +1224,12 @@ function addPointAtCurrentLocation() {
 
     // Get the user's current location
     locateUser();
-
-    console.log("in add point at current location");
-    console.log(myLocation);
+    
+    // Remove the drawnItems layer from the map
+    map.removeLayer(drawnItems);
+    
+    // Create a new empty drawnItems feature group to capture the next user-drawn data
+    drawnItems = new L.FeatureGroup();    
 
     // When a feature is created on the map, a layer on which it sits is also created.
     // Create the locationMarker layer from the current location
@@ -1247,17 +1285,43 @@ map.on('draw:created', function (e) {
     
     // Populate the latitude and longitude textboxes with the coordinates of the clicked point
     $('#ui-controls #latitude').val(latitude);
-    $('#ui-controls #longitude').val(longitude);    
+    $('#ui-controls #longitude').val(longitude);
+    
+    // Enable the Submit button if the required fields are populated
+    checkForRequiredFields();
 
 });
 
+// Function to check for required fields
+function checkForRequiredFields() {
+    
+    // Create variables to store the latitude and longitude
+    var latitude = $('#ui-controls #latitude').val();
+    var longitude = $('#ui-controls #longitude').val();
+    
+    // Create a variable to store the selected species family
+    selectedSpeciesFamily = $("#speciesFamilyDropdown option:selected").text();
+
+    // Create a variable to store the selected species family
+    selectedSpecies = $("#speciesDropdown option:selected").text();
+
+    // If the latitude, longitude, species family, and species are all populated
+    if (latitude !== "" && longitude !== "" && selectedSpeciesFamily !== "" && selectedSpecies !== "") {
+        // Enable the Submit button
+        $('#submitButton').attr("disabled", false);
+    }
+    else {
+        // Disable the Submit button
+        $('#submitButton').attr("disabled", true);
+    }
+}
 
 // Function to create variables for the location and attributes of the point just drawn and run a SQL query to insert the point into the data_collector layer in CARTO
 function setData() {
     
     // Get the name and description submitted by the user
-    var speciesFamily = $("#speciesFamilyDropdown option:selected").text();
-    var species = $("#speciesDropdown option:selected").text();
+    selectedSpeciesFamily = $("#speciesFamilyDropdown option:selected").text();
+    selectedSpecies = $("#speciesDropdown option:selected").text();
 
     // Loop through each of the drawn items
     drawnItems.eachLayer(function (layer) {
@@ -1268,7 +1332,7 @@ function setData() {
 
         // Get the coordinates of the drawn point and add them to the SQL statement
         var a = layer.getLatLng();
-        var sql2 = '{"type":"Point","coordinates":[' + a.lng + "," + a.lat + "]}'),4326),'" + speciesFamily + "','" + species + "','" + parseFloat(a.lat) + "','" + parseFloat(a.lng) + "')";
+        var sql2 = '{"type":"Point","coordinates":[' + a.lng + "," + a.lat + "]}'),4326),'" + selectedSpeciesFamily + "','" + selectedSpecies + "','" + parseFloat(a.lat) + "','" + parseFloat(a.lng) + "')";
 
         // Combine the two parts of the SQL statement
         var pURL = sql + sql2;
@@ -1301,11 +1365,17 @@ function cancelData() {
     // Remove the drawnItems layer from the map
     map.removeLayer(drawnItems);
     
+    // Create a new empty drawnItems feature group to capture the next user-drawn data
+    drawnItems = new L.FeatureGroup();
+    
     // Clear the latitude and longitude textboxes
     $('#ui-controls #latitude').val('');
     $('#ui-controls #longitude').val('');
     $('#speciesFamilyDropdown').val('default').attr('selected');
     $('#speciesDropdown').val('default').attr('selected');
+    
+    // Disable the Submit button
+    $('#submitButton').attr("disabled", true);
 }
 
 

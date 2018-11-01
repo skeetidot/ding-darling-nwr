@@ -1,0 +1,13 @@
+{
+  "name": "J.N. 'Ding' Darling National Wildlife Refuge",
+  "short_name": "'Ding' Darling NWR",
+  "description": "Visitor map of the J.N. 'Ding' Darling National Wildlife Refuge",
+  "start_url": "/?homescreen=1",
+  "background_color": "#000000",
+  "theme_color": "#0f4a73",
+  "icons": [{
+    "src": "images/ding-darling-logo.jpeg",
+    "sizes": "256x256",
+    "type": "image/jpeg"
+  }]
+}

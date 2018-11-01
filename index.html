@@ -140,6 +140,7 @@
                         <option value="picnicking">Picnicking</option>
                         <option value="beaches">Beaches</option>
                         <option value="insideThePark">Inside the Park</option>
+                        <!-- Another option will be added dynamically if the user's current location is within the map bounds -->
                     </select>
 
                 </div>
@@ -180,7 +181,7 @@
                     </select>
 
                     <br><br>
-                    <input id="submitButton" type="submit" value="Submit" onclick="setData();">
+                    <input id="submitButton" type="submit" value="Submit" onclick="setData();" disabled>
                     <input id="resetButton" type="submit" value="Reset" onclick="cancelData();">
                 </div>
             </div>
