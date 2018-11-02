@@ -32,8 +32,7 @@ var refugeBoundary,
 
 
 // Initialize global variables for the layer list and overlays
-var layerList,
-    overlays;
+var layerList;
 
 
 // Initialize a global variable to hold the current location
@@ -46,7 +45,7 @@ var locationMarker = null;
 
 // Initialize the default bounds of the map
 var bounds = [[26.421850916199865, -82.30390548706056],
-              [26.512515912899676, -81.97431564331055]]
+              [26.512515912899676, -81.97431564331055]];
 
 
 // Initialize the list of common species for each species family
@@ -173,8 +172,8 @@ var speciesJsonList = {
 
 
 // Create variables to store the species family and species dropdowns
-var speciesFamilyDropdown = $("#speciesFamilyDropdown")
-var speciesDropdown = $("#speciesDropdown")
+var speciesFamilyDropdown = $("#speciesFamilyDropdown");
+var speciesDropdown = $("#speciesDropdown");
 
 
 // Initialize global variables to hold the selected species family and species
@@ -216,7 +215,7 @@ var updateSpeciesDropdown = function (speciesFamily) {
 
     // Add the species list to the species dropdown
     $("#ui-controls #speciesDropdown").html(listItems);
-}
+};
 
 
 // When the user selects a species, check to enable the Submit button 
@@ -428,7 +427,7 @@ var drawControl = new L.Control.Draw({
 });
 
 
-// Boolean global variable used to control visiblity
+// Boolean global variable used to control visibility
 // Do not show the draw control on the map initially
 // It will be displayed once the user clicks Start Editing
 var controlOnMap = false;
@@ -443,8 +442,7 @@ map.addLayer(Wikimedia);
 
 
 // Build the sidebar and add it to the map
-// Source: https://github.com/nickpeihl/leaflet-sidebar-v2, with show/hide functionality from
-// https://github.com/turbo87/leaflet-sidebar/
+// Source: https://github.com/nickpeihl/leaflet-sidebar-v2
 var sidebar = L.control.sidebar({
     autopan: true, // whether to maintain the centered map point when opening the sidebar
     closeButton: true, // whether to add a close button to the panes
@@ -516,8 +514,8 @@ function getResponsiveDisplay() {
     // Get the header text
     var submitHeaderText = $('#submitTab h1');
 
-    // If the screen width is less than 800 pixels
-    if (screenWidth < 800) {
+    // If the screen width is less than 768 pixels
+    if (screenWidth <= 768) {
 
         // Collapse the sidebar
         sidebar.close();
@@ -538,8 +536,8 @@ function getResponsiveDisplay() {
 
     }
 
-    // If the screen width is greater than or equal to 800 pixels
-    else if (screenWidth >= 800) {
+    // If the screen width is greater than or equal to 768 pixels
+    else if (screenWidth > 768) {
 
         // Expand the sidebar and show the home tab
         sidebar.open('home');
@@ -632,7 +630,7 @@ function loadParkingLots() {
             // Loop through each feature
             onEachFeature: function (feature, layer) {
 
-                // Bind the nameto a popup
+                // Bind the name to a popup
                 layer.bindPopup(feature.properties.route_name + " (" + feature.properties.surface_type + ")");
 
             }
@@ -672,9 +670,11 @@ function loadRoads() {
 
             // Loop through each feature
             onEachFeature: function (feature, layer) {
+                
+                var length = parseFloat(feature.properties.route_leng).toFixed(2).toLocaleString();
 
-                // Bind the nameto a popup
-                layer.bindPopup(feature.properties.route_name);
+                // Bind the name to a popup
+                layer.bindPopup(feature.properties.route_name + " (" + length + " mi)");                
 
             }
 
@@ -696,32 +696,39 @@ function loadTrails() {
         map.removeLayer(trails);
     }
 
+
     // Run the specified sqlQuery from CARTO, return it as a JSON, convert it to a Leaflet GeoJson, and add it to the map with a popup
 
     // For the data source, enter the URL that goes to the SQL API, including our username and the SQL query
     $.getJSON("https://" + cartoUserName + ".carto.com/api/v2/sql?format=GeoJSON&q=" + sqlQueryTrails, function (data) {
 
         // Convert the JSON to a Leaflet GeoJson
-        trails = L.geoJson(data, {
+        // Use the multiStyle plugin to put a transparent thicker solid line behind the dashed line, so the trails are easily clicked
+        // multiStyle source: https://github.com/perliedman/leaflet-multi-style
+        trails = L.geoJson.multiStyle(data, {
 
             // Create an initial style for each feature
-            style: function (feature) {
-                return {
+            styles: [
+                {
                     color: '#e60000', // set stroke color
                     weight: 1.5, // set stroke weight
                     opacity: 1, // set stroke opacity
                     dashArray: '5, 5' // set the dashed line pattern
-                    //lineJoin: 'miter' // set the line join type
                     // Line Join Types: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-linejoin
-                };
-            },
+                },
+                {
+                    weight: 3,
+                    opacity: 0,
+                    color: 'black'
+                }
+            ],
 
             // Loop through each feature
             onEachFeature: function (feature, layer) {
 
                 var length = parseFloat(feature.properties.sec_length).toFixed(2).toLocaleString();
 
-                // Bind the nameto a popup
+                // Bind the name to a popup
                 layer.bindPopup(feature.properties.name + " (" + length + " mi)");
 
             }
@@ -731,9 +738,13 @@ function loadTrails() {
         // Bring the layer to the back of the layer order
         trails.bringToBack();
 
+        var trailsTransparent = trails;
+
+
+        trailsTransparent.bringToBack();
+
     });
 }
-
 
 // Function to load the refuge trail features onto the map
 function loadTrailFeatures() {
@@ -766,7 +777,7 @@ function loadTrailFeatures() {
             // Loop through each feature
             onEachFeature: function (feature, layer) {
 
-                // Bind the nameto a popup
+                // Bind the name to a popup
                 layer.bindPopup(feature.properties.feature_type);
 
             }
@@ -855,7 +866,7 @@ function loadeBirdHotspots() {
             // Loop through each feature
             onEachFeature: function (feature, layer) {
 
-                // Bind the nameto a popup
+                // Bind the name to a popup
                 layer.bindPopup(feature.properties.name + " Birding Hotspot");
 
             }
@@ -942,7 +953,7 @@ function loadWildlifeObservations() {
             // Loop through each feature
             onEachFeature: function (feature, layer) {
 
-                // Bind the nameto a popup
+                // Bind the name to a popup
                 layer.bindPopup(feature.properties.species);
 
             }
@@ -979,16 +990,14 @@ function getWildlifeObservationMarkerColor(speciesFamily) {
 // Function to filter the points of interest based on the selected theme
 function filterPointsOfInterest(selectedTheme) {
 
-    console.log("Selected Theme: " + selectedTheme);
-
     // All Points of Interest
     if (selectedTheme == "all") {
 
         // Update the SQL query to the one showing all features
-        sqlQueryFilteredVisitorServiceFeatures = sqlQueryVisitorServiceFeatures;
+        var sqlQueryAll = sqlQueryVisitorServiceFeatures;
 
         // Reload the points of interest
-        loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures);
+        loadVisitorServiceFeatures(sqlQueryAll);
     }
     
     // Practical Information
@@ -996,10 +1005,10 @@ function filterPointsOfInterest(selectedTheme) {
 
         // Update the SQL query to the one showing all visitor centers
         // 11 - information/visitor center     
-        sqlQueryFilteredVisitorServiceFeatures = "SELECT * FROM visitor_service_features WHERE category IN (11)";
+        var sqlQueryVisitorCenters = "SELECT * FROM visitor_service_features WHERE category IN (11)";
 
         // Reload the points of interest
-        loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures);
+        loadVisitorServiceFeatures(sqlQueryVisitorCenters);
     }       
 
     // Driving
@@ -1012,10 +1021,10 @@ function filterPointsOfInterest(selectedTheme) {
         // 15 - observation deck
         // 16 - parking
         // 23 - lighthouse
-        sqlQueryFilteredVisitorServiceFeatures = "SELECT * FROM visitor_service_features WHERE category IN (4, 11, 14, 15, 16, 23)";
+        var sqlQueryDriving = "SELECT * FROM visitor_service_features WHERE category IN (4, 11, 14, 15, 16, 23)";
 
         // Reload the points of interest
-        loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures);
+        loadVisitorServiceFeatures(sqlQueryDriving);
     }
 
     // Hiking
@@ -1028,10 +1037,10 @@ function filterPointsOfInterest(selectedTheme) {
         // 18 - restroom
         // 19 - pavilion
         // 20 - trailhead
-        sqlQueryFilteredVisitorServiceFeatures = "SELECT * FROM visitor_service_features WHERE category IN (12, 14, 15, 18, 19, 20)";
+        var sqlQueryHiking = "SELECT * FROM visitor_service_features WHERE category IN (12, 14, 15, 18, 19, 20)";
 
         // Reload the points of interest
-        loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures);
+        loadVisitorServiceFeatures(sqlQueryHiking);
     }
 
     // Fishing and Boating
@@ -1041,10 +1050,10 @@ function filterPointsOfInterest(selectedTheme) {
         // 5 - fishing site
         // 6 - fishing pier
         // 8 - hand launch / small boat launch
-        sqlQueryFilteredVisitorServiceFeatures = "SELECT * FROM visitor_service_features WHERE category IN (5, 6, 8)";
+        var sqlQueryFishingBoating = "SELECT * FROM visitor_service_features WHERE category IN (5, 6, 8)";
 
         // Reload the points of interest
-        loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures);
+        loadVisitorServiceFeatures(sqlQueryFishingBoating);
     }
     
     // Picnicking
@@ -1052,10 +1061,10 @@ function filterPointsOfInterest(selectedTheme) {
 
         // Update the SQL query to the one showing picnic areas
         // 17 - picnic area
-        sqlQueryFilteredVisitorServiceFeatures = "SELECT * FROM visitor_service_features WHERE category IN (17)";
+        var sqlQueryPicnicking = "SELECT * FROM visitor_service_features WHERE category IN (17)";
 
         // Reload the points of interest
-        loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures);
+        loadVisitorServiceFeatures(sqlQueryPicnicking);
     }
     
     // Beaches
@@ -1063,33 +1072,32 @@ function filterPointsOfInterest(selectedTheme) {
 
         // Update the SQL query to the one showing picnic areas
         // 35 - beach access
-        sqlQueryFilteredVisitorServiceFeatures = "SELECT * FROM visitor_service_features WHERE category IN (35)";
+        var sqlQueryBeaches = "SELECT * FROM visitor_service_features WHERE category IN (35)";
 
         // Reload the points of interest
-        loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures);
+        loadVisitorServiceFeatures(sqlQueryBeaches);
     }
     
-    // Inside the Park
-    else if (selectedTheme == "insideThePark") {
+    // Inside the Refuge
+    else if (selectedTheme == "insideTheRefuge") {
 
-        // Update the SQL query to the one showing features inside the park
-        sqlQueryFilteredVisitorServiceFeatures = "SELECT visitor_service_features.name, visitor_service_features.category, visitor_service_features.the_geom FROM visitor_service_features, refuge_boundary WHERE ST_Intersects(visitor_service_features.the_geom, refuge_boundary.the_geom)";
-        
-        console.log(sqlQueryFilteredVisitorServiceFeatures);
+        // Update the SQL query to the one showing features inside the refuge
+        var sqlQueryInsideRefuge = "SELECT visitor_service_features.name, visitor_service_features.category, visitor_service_features.the_geom FROM visitor_service_features, refuge_boundary WHERE ST_Intersects(visitor_service_features.the_geom, refuge_boundary.the_geom)";
 
         // Reload the points of interest
-        loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures);
+        loadVisitorServiceFeatures(sqlQueryInsideRefuge);
     }
     
-    // Within 0.25 miles from current location
+    // Within 0.5 miles from current location
     else if (selectedTheme == "nearby") {
         
-        var sqlQueryFilteredVisitorServiceFeatures = "SELECT * FROM visitor_service_features WHERE ST_Distance_Sphere(the_geom, ST_MakePoint(" + myLocation.lng + "," + myLocation.lat + ")) <= 1609.34 * 0.5";
+        // Get the user's current location
+        locateUser();
         
-        console.log(sqlQueryFilteredVisitorServiceFeatures);
+        var sqlQueryNearby = "SELECT * FROM visitor_service_features WHERE ST_Distance_Sphere(the_geom, ST_MakePoint(" + myLocation.lng + "," + myLocation.lat + ")) <= 1609.34 * 0.5";
         
         // Reload the points of interest
-        loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures);        
+        loadVisitorServiceFeatures(sqlQueryNearby);        
     }
     
     // If the screen width is less than 800 pixels
@@ -1161,6 +1169,18 @@ function locationFound(e) {
         if (!filterDropdownArray.includes("nearby")) {
             $('#filterDropdown').append(nearbyTheme);
         }
+        
+        // Create a variable to store the value of the selected theme
+        var selectedTheme = $("#filterDropdown option:selected").val();
+        
+        // If the selected theme is features within 0.5 miles from the current location update the points of interest based on the new current location
+        if (selectedTheme == "nearby") {
+            
+            // Update the points of interest based on the selected theme
+            filterPointsOfInterest(selectedTheme);
+            
+        }
+    
     }
 }
 
@@ -1191,7 +1211,7 @@ function startEdits() {
     $('#ui-controls #longitude').val("");      
 
     // If the draw control is already on the map remove it and set the controlOnMap flag back to false
-    if (controlOnMap == true) {
+    if (controlOnMap === true) {
         map.removeControl(drawControl);
         controlOnMap = false;
     }
@@ -1207,7 +1227,7 @@ function startEdits() {
         sidebar.close();        
     }
 
-};
+}
 
 
 // Function to remove the draw control from the map
@@ -1216,7 +1236,7 @@ function stopEdits() {
     // Remove the draw control from the map and set the controlOnMap flag back to false
     map.removeControl(drawControl);
     controlOnMap = false;
-};
+}
 
 
 // Function to run when the Current Location button is clicked
@@ -1327,7 +1347,7 @@ function setData() {
     drawnItems.eachLayer(function (layer) {
 
         // Write a SQL/PostGIS query to insert the geometry, name, and description for the drawn item into the data_collector table
-        // Set the spatial reference baesd on the GeoJSON
+        // Set the spatial reference based on the GeoJSON
         var sql = "INSERT INTO wildlife_observations_collector (the_geom, species_family, species, latitude, longitude) VALUES (ST_SetSRID(ST_GeomFromGeoJSON('";
 
         // Get the coordinates of the drawn point and add them to the SQL statement
@@ -1337,7 +1357,7 @@ function setData() {
         // Combine the two parts of the SQL statement
         var pURL = sql + sql2;
         
-        console.log(pURL);
+        //console.log(pURL);
 
         /* Full SQL statement:
         INSERT INTO data_collector (the_geom, species_family, species, latitude, longitude)
@@ -1347,7 +1367,7 @@ function setData() {
 
         // Submit the SQL statement to the PHP proxy, so it can be added to the database without exposing the CARTO API key
         submitToProxy(pURL);
-        console.log("Feature has been submitted to the proxy");
+        //console.log("Feature has been submitted to the proxy");
     });
 
     // Remove the drawn items layer from the map
@@ -1356,7 +1376,7 @@ function setData() {
     // Create a new empty drawnItems feature group to capture the next user-drawn data
     drawnItems = new L.FeatureGroup();
 
-};
+}
 
 
 // Function to cancel the newly drawn points
@@ -1386,7 +1406,7 @@ var submitToProxy = function (q) {
         cache: false,
         timeStamp: new Date().getTime()
     }, function (data) {
-        console.log(data);
+        //console.log(data); // Command returned by the post submission
 
         // Refresh the layer to show the updated data
         refreshLayer();
@@ -1400,7 +1420,7 @@ function refreshLayer() {
     // Remove the existing wildlife observations layer
     if (map.hasLayer(wildlifeObservations)) {
         map.removeLayer(wildlifeObservations);
-    };
+    }
     
     // Reload the wildlife observations layer with the new point
     loadWildlifeObservations();
@@ -1411,4 +1431,4 @@ function refreshLayer() {
         // Collapse the sidebar
         sidebar.close();        
     }
-};
+}

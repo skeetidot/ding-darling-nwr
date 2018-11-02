@@ -33,7 +33,7 @@
 
     <!-- LEAFLET DRAW STYLESHEET -->
     <link rel="stylesheet" href="lib/leaflet-draw/leaflet.draw.css" />
-
+    
     <!-- JQUERY UI STYLESHEET -->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 
@@ -68,9 +68,9 @@
 
     <!-- LEAFLET AWESOME MARKERS -->
     <script src="lib/leaflet.awesome-markers-2.0/dist/leaflet.awesome-markers.js"></script>
-
-    <!-- ESRI LEAFLET -->
-    <script src="https://unpkg.com/esri-leaflet@2.2.3/dist/esri-leaflet.js" integrity="sha512-YZ6b5bXRVwipfqul5krehD9qlbJzc6KOGXYsDjU9HHXW2gK57xmWl2gU6nAegiErAqFXhygKIsWPKbjLPXVb2g==" crossorigin=""></script>
+    
+    <!-- LEAFLET MULTI STYLE LAYER -->
+    <script src="lib/leaflet-multi-style-master/multi-style-layer.js"></script>
 
     <!-- JQUERY -->
     <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
@@ -116,7 +116,7 @@
                 <p>The refuge is known as <a href="https://www.youtube.com/watch?v=hzEfZyU7sNs" target="_blank">"America's Birding Hotspot"</a> and is also home to iconic Florida <a href="https://www.dingdarlingsociety.org/animals/sightings?page=1&filter=all" target="_blank">wildlife</a>, including the Florida manatee, bottlenose dolphin, and American alligator. Use this map to view birding hotspots from eBird, view recent wildlife sightings, and submit your own observations.</p>
 
                 <div align="center">
-                    <a href="https://www.fws.gov/refuge/jn_ding_darling/" target="_blank"><img src="images/ding-darling-logo.jpeg" alt="Ding Darling National Wildlife Refuge Logo" width="50%"></a>
+                    <a href="https://www.fws.gov/refuge/jn_ding_darling/" target="_blank"><img src="images/ding-darling-logo.png" alt="Ding Darling National Wildlife Refuge Logo" width="50%"></a>
                 </div>
 
             </div>
@@ -125,7 +125,7 @@
                 <h1 class="leaflet-sidebar-header">Filter Points of Interest
                     <span class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
-                <p>Filter points of interest by theme</p>
+                <p>Filter points of interest by theme or location</p>
 
                 <!-- Build UI control-->
                 <div id='ui-controls'>
@@ -139,7 +139,7 @@
                         <option value="fishingBoating">Fishing and Boating</option>
                         <option value="picnicking">Picnicking</option>
                         <option value="beaches">Beaches</option>
-                        <option value="insideThePark">Inside the Park</option>
+                        <option value="insideTheRefuge">Inside the Refuge</option>
                         <!-- Another option will be added dynamically if the user's current location is within the map bounds -->
                     </select>
 
@@ -195,83 +195,83 @@
                     <div id="fieldLabel">Points of Interest</div>
 
                     <div id="legendItem">
-                        <img src="icons/4_driving_tour.png" alt="Driving Tour">
+                        <img src="icons/4_driving_tour.png" alt="Driving Tour" width="20px">
                         <span class="legendText">Driving Tour Entrance and Exit</span>
                     </div>
 
                     <div id="legendItem">
-                        <img src="icons/5_fishing.png" alt="Fishing">
+                        <img src="icons/5_fishing.png" alt="Fishing" width="20px">
                         <span class="legendText">Fishing Area</span>
                     </div>
 
                     <div id="legendItem">
-                        <img src="icons/6_fishing_pier.png" alt="Fishing Pier">
+                        <img src="icons/6_fishing_pier.png" alt="Fishing Pier" width="20px">
                         <span class="legendText">Fishing Pier</span>
                     </div>
 
                     <div id="legendItem">
-                        <img src="icons/8_hand_launch_small_boat_launch.png" alt="Hand Launch / Small Boat Launch">
-                        <span class="legendText">Hand Launch / Small Boat Launch </span>
+                        <img src="icons/8_hand_launch_small_boat_launch.png" alt="Hand Launch / Small Boat Launch" width="20px">
+                        <span class="legendText">Hand Launch / Small Boat Launch</span>
                     </div>
 
                     <div id="legendItem">
-                        <img src="icons/11_information.png" alt="Visitor Center / Information">
+                        <img src="icons/11_information.png" alt="Visitor Center / Information" width="20px">
                         <span class="legendText">Visitor Center / Information</span>
                     </div>
 
                     <div id="legendItem">
-                        <img src="icons/12_interpretive_sign.png" alt="Interpretive Sign">
+                        <img src="icons/12_interpretive_sign.png" alt="Interpretive Sign" width="20px">
                         <span class="legendText">Interpretive Sign</span>
                     </div>
 
                     <div id="legendItem">
-                        <img src="icons/14_scenic_viewpoint.png" alt="Scenic Viewpoint">
+                        <img src="icons/14_scenic_viewpoint.png" alt="Scenic Viewpoint" width="20px">
                         <span class="legendText">Scenic Viewpoint</span>
                     </div>
 
                     <div id="legendItem">
-                        <img src="icons/15_observation_deck.png" alt="Observation Deck">
+                        <img src="icons/15_observation_deck.png" alt="Observation Deck" width="20px">
                         <span class="legendText">Observation Deck</span>
                     </div>
 
                     <div id="legendItem">
-                        <img src="icons/16_parking.png" alt="Parking">
+                        <img src="icons/16_parking.png" alt="Parking" width="20px">
                         <span class="legendText">Parking</span>
                     </div>
 
                     <div id="legendItem">
-                        <img src="icons/17_picnic_area.png" alt="Picnic Area">
+                        <img src="icons/17_picnic_area.png" alt="Picnic Area" width="20px">
                         <span class="legendText">Picnic Area</span>
                     </div>
 
                     <div id="legendItem">
-                        <img src="icons/18_restroom.png" alt="Restroom">
+                        <img src="icons/18_restroom.png" alt="Restroom" width="20px">
                         <span class="legendText">Restroom</span>
                     </div>
 
                     <div id="legendItem">
-                        <img src="icons/19_pavilion.png" alt="Pavilion">
+                        <img src="icons/19_pavilion.png" alt="Pavilion" width="20px">
                         <span class="legendText">Pavilion</span>
                     </div>
 
                     <div id="legendItem">
-                        <img src="icons/20_trailhead.png" alt="Trailhead">
+                        <img src="icons/20_trailhead.png" alt="Trailhead" width="20px">
                         <span class="legendText">Trailhead</span>
                     </div>
 
                     <div id="legendItem">
-                        <img src="icons/23_lighthouse.png" alt="Lighthouse">
+                        <img src="icons/23_lighthouse.png" alt="Lighthouse" width="20px">
                         <span class="legendText">Lighthouse</span>
                     </div>
 
                     <div id="legendItem">
-                        <img src="icons/35_beach_access.png" alt="Beach">
+                        <img src="icons/35_beach_access.png" alt="Beach" width="20px">
                         <span class="legendText">Beach</span>
                     </div>
 
                     <div id="fieldLabel">eBird Hotspots</div>
                     <div id="legendItem">
-                        <img src="icons/ebird_hotspots.png" alt="Driving Tour">
+                        <img src="icons/ebird_hotspots.png" alt="eBird Hotspots">
                         <span class="legendText"></span>
                     </div>
                     
