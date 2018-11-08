@@ -404,7 +404,6 @@ var zoomControl = L.control.zoom({
 layerList = L.control.layers(baseMaps, overlays, {
     collapsed: false, // Keep the layer list open
     autoZIndex: true, // Assign zIndexes in increasing order to all of its layers so that the order is preserved when switching them on/off
-    // hideSingleBase: true // Hide the base layers section when there is only one layer
 }).addTo(map);
 
 
