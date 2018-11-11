@@ -404,6 +404,7 @@ var zoomControl = L.control.zoom({
 layerList = L.control.layers(baseMaps, overlays, {
     collapsed: false, // Keep the layer list open
     autoZIndex: true, // Assign zIndexes in increasing order to all of its layers so that the order is preserved when switching them on/off
+    // hideSingleBase: true // Hide the base layers section when there is only one layer
 }).addTo(map);
 
 
@@ -630,7 +631,7 @@ function loadParkingLots() {
             onEachFeature: function (feature, layer) {
 
                 // Bind the name to a popup
-                layer.bindPopup(feature.properties.route_name + " (" + feature.properties.surface_type + ")");
+                layer.bindPopup(feature.properties.route_name + " (" + feature.properties.surface_type.toLowerCase() + ")");
 
             }
 
@@ -670,9 +671,10 @@ function loadRoads() {
             // Loop through each feature
             onEachFeature: function (feature, layer) {
                 
+                // Get the length from the GeoJSON and round it to 2 decimal places
                 var length = parseFloat(feature.properties.route_leng).toFixed(2).toLocaleString();
 
-                // Bind the name to a popup
+                // Bind the name and length to a popup
                 layer.bindPopup(feature.properties.route_name + " (" + length + " mi)");                
 
             }
@@ -725,10 +727,11 @@ function loadTrails() {
             // Loop through each feature
             onEachFeature: function (feature, layer) {
 
+                // Get the length from the GeoJSON and round it to 2 decimal places
                 var length = parseFloat(feature.properties.sec_length).toFixed(2).toLocaleString();
 
                 // Bind the name to a popup
-                layer.bindPopup(feature.properties.name + " (" + length + " mi)");
+                layer.bindPopup(feature.properties.name + " (" + feature.properties.surface.toLowerCase() + ", " + length + " mi)");
 
             }
 
@@ -744,6 +747,7 @@ function loadTrails() {
 
     });
 }
+
 
 // Function to load the refuge trail features onto the map
 function loadTrailFeatures() {
@@ -939,6 +943,7 @@ function loadWildlifeObservations() {
                 // Get the species family to use to set its marker color
                 var speciesFamily = feature.properties.species_family;
                 
+                // Show the points as circle markers with a fill color based on their species family
                 return L.circleMarker(latlng, {
                     fillColor: getWildlifeObservationMarkerColor(speciesFamily),
                     fillOpacity: 1,
