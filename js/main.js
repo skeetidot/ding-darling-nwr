@@ -1210,9 +1210,11 @@ function startEdits() {
     // Create a new empty drawnItems feature group to capture the next user-drawn data
     drawnItems = new L.FeatureGroup();  
     
-    // Clear the latitude and longitude textboxes
+    // Clear the latitude and longitude textboxes and species family and species dropdowns
     $('#ui-controls #latitude').val("");
-    $('#ui-controls #longitude').val("");      
+    $('#ui-controls #longitude').val("");
+    $('#speciesFamilyDropdown').val('default').attr('selected');
+    $('#speciesDropdown').val('default').attr('selected');    
 
     // If the draw control is already on the map remove it and set the controlOnMap flag back to false
     if (controlOnMap === true) {
@@ -1379,6 +1381,12 @@ function setData() {
 
     // Create a new empty drawnItems feature group to capture the next user-drawn data
     drawnItems = new L.FeatureGroup();
+    
+    // Clear the latitude and longitude textboxes and species family and species dropdowns
+    $('#ui-controls #latitude').val("");
+    $('#ui-controls #longitude').val("");
+    $('#speciesFamilyDropdown').val('default').attr('selected');
+    $('#speciesDropdown').val('default').attr('selected');      
 
 }
 
@@ -1392,7 +1400,7 @@ function cancelData() {
     // Create a new empty drawnItems feature group to capture the next user-drawn data
     drawnItems = new L.FeatureGroup();
     
-    // Clear the latitude and longitude textboxes
+    // Clear the latitude and longitude textboxes and species family and species dropdowns
     $('#ui-controls #latitude').val('');
     $('#ui-controls #longitude').val('');
     $('#speciesFamilyDropdown').val('default').attr('selected');
