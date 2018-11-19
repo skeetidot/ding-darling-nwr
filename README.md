@@ -6,4 +6,4 @@ The interactive visitor map is focused on the themes of general tourism and ecot
 
 The mobile-friendly layout is compatible with any desktop computer, tablet, or phone with internet access.
 
-View a demo of the application at https://www.youtube.com/watch?v=JK6WJg-0xEg&t=9s.
+View a demo of the application at <a href="https://www.youtube.com/watch?v=JK6WJg-0xEg" target="_blank">https://www.youtube.com/watch?v=JK6WJg-0xEg</a>.
