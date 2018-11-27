@@ -556,9 +556,6 @@ function getResponsiveDisplay() {
         map.setMinZoom(11);
         map.setZoom(11);
 
-        // Fit the map to the refuge bounds
-        map.fitBounds(bounds);
-
     }
 
     // If the screen width is greater than 850 pixels
@@ -582,9 +579,6 @@ function getResponsiveDisplay() {
         // Show the extent of the refuge at its original scale
         map.setMinZoom(13);
         map.setZoom(13);
-
-        // Fit the map to the refuge bounds
-        map.fitBounds(bounds);
 
     }
 }
@@ -1282,6 +1276,9 @@ function locationNotFound(e) {
 
     // Display the default error message from Leaflet
     alert(e.message);
+    
+    // Detect the screen size and get the appropriate sidebar and zoom display
+    getResponsiveDisplay();
     
     // Disable the Use Current Location button, so observations can only be submitted by clicking a point
     $('#ui-controls #currentLocationButton').attr("disabled", true);    
