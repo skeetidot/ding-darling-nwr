@@ -539,8 +539,8 @@ function getResponsiveDisplay() {
     // Get the header text
     var submitHeaderText = $('#submitTab h1');
 
-    // If the screen width is less than or equal to 768 pixels
-    if (screenWidth <= 768) {
+    // If the screen width is less than or equal to 850 pixels
+    if (screenWidth <= 850) {
 
         // Collapse the sidebar
         sidebar.close();
@@ -561,8 +561,8 @@ function getResponsiveDisplay() {
 
     }
 
-    // If the screen width is greater than 768 pixels
-    else if (screenWidth > 768) {
+    // If the screen width is greater than 850 pixels
+    else if (screenWidth > 850) {
 
         // Expand the sidebar and show the home tab
         sidebar.open('home');
@@ -1192,8 +1192,8 @@ function filterPointsOfInterest(selectedTheme) {
         loadVisitorServiceFeatures(sqlQueryNearby);        
     }
     
-    // If the screen width is less than or equal to 768 pixels
-    if (screen.width <= 768) {
+    // If the screen width is less than or equal to 850 pixels
+    if (screen.width <= 850) {
         
         // Collapse the sidebar
         sidebar.close();        
@@ -1314,8 +1314,8 @@ function startEdits() {
     map.addControl(drawControl);
     controlOnMap = true;
     
-    // If the screen width is less than or equal to 768 pixels
-    if (screen.width <= 768) {
+    // If the screen width is less than or equal to 850 pixels
+    if (screen.width <= 850) {
         
         // Collapse the sidebar
         sidebar.close();        
@@ -1525,8 +1525,8 @@ function refreshLayer() {
     // Reload the wildlife observations layer with the new point
     loadWildlifeObservations();
     
-    // If the screen width is less than or equal to 768 pixels
-    if (screen.width <= 768) {
+    // If the screen width is less than or equal to 850 pixels
+    if (screen.width <= 850) {
         
         // Collapse the sidebar
         sidebar.close();        
