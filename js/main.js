@@ -242,101 +242,6 @@ filterByThemeDropdown.on('change', function () {
     
 });
 
-// Initialize global variables for icons
-
-// Create the bird marker
-// Plugin Source: https://github.com/lvoogdt/Leaflet.awesome-markers
-// Font Awesome Markers: https://fontawesome.com/icons?from=io
-var birdIcon = L.AwesomeMarkers.icon({
-    prefix: 'fa', // font awesome
-    icon: 'crow',
-    markerColor: 'cadetblue', // background color
-    iconColor: 'white' // foreground color
-});
-
-// Create a marker for the user's current location
-var myLocationIcon = L.AwesomeMarkers.icon({
-    prefix: 'fa', // font awesome
-    icon: 'location-arrow',
-    markerColor: 'blue', // background color
-    iconColor: 'white' // foreground color
-});
-
-// Create a marker for a driving tour
-var drivingTourIcon = L.icon({
-    iconUrl: "icons/4_driving_tour.png"
-});
-
-// Create a marker for a fishing point
-var fishingPointIcon = L.icon({
-    iconUrl: "icons/5_fishing.png"
-});
-
-// Create a marker for a fishing pier
-var fishingPierIcon = L.icon({
-    iconUrl: "icons/6_fishing_pier.png"
-});
-
-// Create a marker for a hand launch / small boat launch
-var smallBoatLaunchIcon = L.icon({
-    iconUrl: "icons/8_hand_launch_small_boat_launch.png"
-});
-
-// Create a marker for an information point
-var infoPointIcon = L.icon({
-    iconUrl: "icons/11_information.png"
-});
-
-// Create a marker for an interpretive sign
-var interpretiveSignIcon = L.icon({
-    iconUrl: "icons/12_interpretive_sign.png"
-});
-
-// Create a marker for a scenic viewpoint
-var scenicViewpointIcon = L.icon({
-    iconUrl: "icons/14_scenic_viewpoint.png"
-});
-
-// Create a marker for an observation deck
-var observationDeckIcon = L.icon({
-    iconUrl: "icons/15_observation_deck.png"
-});
-
-// Create a marker for a parking area
-var parkingIcon = L.icon({
-    iconUrl: "icons/16_parking.png"
-});
-
-// Create a marker for a picnic area
-var picnicAreaIcon = L.icon({
-    iconUrl: "icons/17_picnic_area.png"
-});
-
-// Create a marker for a restroom
-var restroomIcon = L.icon({
-    iconUrl: "icons/18_restroom.png"
-});
-
-// Create a marker for a pavilion
-var pavilionIcon = L.icon({
-    iconUrl: "icons/19_pavilion.png"
-});
-
-// Create a marker for a trailhead
-var trailheadIcon = L.icon({
-    iconUrl: "icons/20_trailhead.png"
-});
-
-// Create a marker for a lighthouse
-var lighthouseIcon = L.icon({
-    iconUrl: "icons/23_lighthouse.png"
-});
-
-// Create a marker for beach access
-var beachAccessIcon = L.icon({
-    iconUrl: "icons/35_beach_access.png"
-});
-
 
 // Set a global variable for the CARTO username
 var cartoUserName = "lewinkler2";
@@ -397,6 +302,117 @@ var map = L.map('map', mapOptions);
 // Initialize a zoom control that will show in the top right corner based on the detected screen width
 var zoomControl = L.control.zoom({
     position: 'topleft'
+});
+
+
+// Initialize global variables for icons
+
+// Create the bird marker
+// Plugin Source: https://github.com/lvoogdt/Leaflet.awesome-markers
+// Font Awesome Markers: https://fontawesome.com/icons?from=io
+var birdIcon = L.AwesomeMarkers.icon({
+    prefix: 'fa', // font awesome
+    icon: 'crow',
+    markerColor: 'cadetblue', // background color
+    iconColor: 'white', // foreground color
+});
+
+// Create a marker for the user's current location
+var myLocationIcon = L.AwesomeMarkers.icon({
+    prefix: 'fa', // font awesome
+    icon: 'location-arrow',
+    markerColor: 'blue', // background color
+    iconColor: 'white', // foreground color
+});
+
+// Create a marker for a driving tour
+var drivingTourIcon = L.icon({
+    iconUrl: "icons/4_driving_tour.png",
+    iconSize: getIconSize()
+});
+
+// Create a marker for a fishing point
+var fishingPointIcon = L.icon({
+    iconUrl: "icons/5_fishing.png",
+    iconSize: getIconSize()    
+});
+
+// Create a marker for a fishing pier
+var fishingPierIcon = L.icon({
+    iconUrl: "icons/6_fishing_pier.png",
+    iconSize: getIconSize()    
+});
+
+// Create a marker for a hand launch / small boat launch
+var smallBoatLaunchIcon = L.icon({
+    iconUrl: "icons/8_hand_launch_small_boat_launch.png",
+    iconSize: getIconSize()    
+});
+
+// Create a marker for an information point
+var infoPointIcon = L.icon({
+    iconUrl: "icons/11_information.png",
+    iconSize: getIconSize()    
+});
+
+// Create a marker for an interpretive sign
+var interpretiveSignIcon = L.icon({
+    iconUrl: "icons/12_interpretive_sign.png",
+    iconSize: getIconSize()    
+});
+
+// Create a marker for a scenic viewpoint
+var scenicViewpointIcon = L.icon({
+    iconUrl: "icons/14_scenic_viewpoint.png",
+    iconSize: getIconSize()    
+});
+
+// Create a marker for an observation deck
+var observationDeckIcon = L.icon({
+    iconUrl: "icons/15_observation_deck.png",
+    iconSize: getIconSize()    
+});
+
+// Create a marker for a parking area
+var parkingIcon = L.icon({
+    iconUrl: "icons/16_parking.png",
+    iconSize: getIconSize()    
+});
+
+// Create a marker for a picnic area
+var picnicAreaIcon = L.icon({
+    iconUrl: "icons/17_picnic_area.png",
+    iconSize: getIconSize()    
+});
+
+// Create a marker for a restroom
+var restroomIcon = L.icon({
+    iconUrl: "icons/18_restroom.png",
+    iconSize: getIconSize()    
+});
+
+// Create a marker for a pavilion
+var pavilionIcon = L.icon({
+    iconUrl: "icons/19_pavilion.png",
+    iconSize: getIconSize()    
+});
+
+// Create a marker for a trailhead
+var trailheadIcon = L.icon({
+    iconUrl: "icons/20_trailhead.png",
+    iconSize: getIconSize()    
+});
+
+// Create a marker for a lighthouse
+var lighthouseIcon = L.icon({
+    iconUrl: "icons/23_lighthouse.png",
+    iconSize: getIconSize()    
+});
+
+// Create a marker for beach access
+var beachAccessIcon = L.icon({
+    iconUrl: "icons/35_beach_access.png",
+    iconSize: getIconSize()    
 });
 
 
@@ -501,12 +517,21 @@ map.on('locationfound', locationFound);
 map.on('locationerror', locationNotFound);
 
 
+// When the user zooms in or out
+map.on('zoom', function (e) {
+    
+    // Reload the points of interest based on the updated icon size
+    loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures);
+    
+});
+
+
 // Function that gets the screen width and customizes the display
 function getResponsiveDisplay() {
 
     // Get the screen width
     var screenWidth = screen.width;
-    console.log("Screen Width: " + screenWidth);
+    //console.log("Screen Width: " + screenWidth);
 
     // Get the header text
     var headerText = $('#home h1');
@@ -514,7 +539,7 @@ function getResponsiveDisplay() {
     // Get the header text
     var submitHeaderText = $('#submitTab h1');
 
-    // If the screen width is less than 768 pixels
+    // If the screen width is less than or equal to 768 pixels
     if (screenWidth <= 768) {
 
         // Collapse the sidebar
@@ -536,7 +561,7 @@ function getResponsiveDisplay() {
 
     }
 
-    // If the screen width is greater than or equal to 768 pixels
+    // If the screen width is greater than 768 pixels
     else if (screenWidth > 768) {
 
         // Expand the sidebar and show the home tab
@@ -741,8 +766,6 @@ function loadTrails() {
         trails.bringToBack();
 
         var trailsTransparent = trails;
-
-
         trailsTransparent.bringToBack();
 
     });
@@ -805,6 +828,9 @@ function loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures) {
     // Clear the contents of the visitor service features layer group
     // so it can be redrawn with the filtered set
     visitorServiceFeaturesLayerGroup.clearLayers();
+    
+    // Get the icon size for the new zoom level
+    getIconSize(); 
 
     // Run the specified sqlQuery from CARTO, return it as a JSON, convert it to a Leaflet GeoJson, and add it to the map with a popup
     // For the data source, enter the URL that goes to the SQL API, including our username and the SQL query
@@ -817,8 +843,8 @@ function loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures) {
             pointToLayer: function (feature, latlng) {
 
                 // Get the feature category to use to set its icon
-                var featureType = feature.properties.category;
-
+                var featureType = feature.properties.category;  
+                
                 // Get the appropriate visitor service icon based on the feature category
                 return L.marker(latlng, {
                     icon: getVisitorServiceIcon(featureType)
@@ -882,42 +908,104 @@ function loadeBirdHotspots() {
 }
 
 
-// Function to get the icon for each visitor service feature based on its category
-function getVisitorServiceIcon(category) {
+// Function to get the icon for each visitor service feature based on its category and get the icon size based on the map's zoom level
+function getVisitorServiceIcon(category) {    
 
     if (category == 4) {
+        drivingTourIcon.options.iconSize = getIconSize();
         return drivingTourIcon;
-    } else if (category == 5) {
+    }
+    
+    else if (category == 5) {
+        fishingPointIcon.options.iconSize = getIconSize();
         return fishingPointIcon;
-    } else if (category == 6) {
+    }
+    
+    else if (category == 6) {
+        fishingPierIcon.options.iconSize = getIconSize();
         return fishingPierIcon;
-    } else if (category == 8) {
+    }
+    
+    else if (category == 8) {
+        smallBoatLaunchIcon.options.iconSize = getIconSize();
         return smallBoatLaunchIcon;
-    } else if (category == 11) {
+    }
+    
+    else if (category == 11) {
+        infoPointIcon.options.iconSize = getIconSize();
         return infoPointIcon;
-    } else if (category == 12) {
+    }
+    
+    else if (category == 12) {
+        interpretiveSignIcon.options.iconSize = getIconSize();
         return interpretiveSignIcon;
-    } else if (category == 14) {
+    }
+    
+    else if (category == 14) {
+        scenicViewpointIcon.options.iconSize = getIconSize();
         return scenicViewpointIcon;
-    } else if (category == 15) {
+    }
+    
+    else if (category == 15) {
+        observationDeckIcon.options.iconSize = getIconSize();
         return observationDeckIcon;
-    } else if (category == 16) {
+    }
+    
+    else if (category == 16) {
+        parkingIcon.options.iconSize = getIconSize();
         return parkingIcon;
-    } else if (category == 17) {
+    }
+    
+    else if (category == 17) {
+        picnicAreaIcon.options.iconSize = getIconSize();
         return picnicAreaIcon;
-    } else if (category == 18) {
+    }
+    
+    else if (category == 18) {
+        restroomIcon.options.iconSize = getIconSize();
         return restroomIcon;
-    } else if (category == 19) {
+    }
+    
+    else if (category == 19) {
+        pavilionIcon.options.iconSize = getIconSize();
         return pavilionIcon;
-    } else if (category == 20) {
+    }
+    
+    else if (category == 20) {
+        trailheadIcon.options.iconSize = getIconSize();
         return trailheadIcon;
-    } else if (category == 23) {
+    }
+    
+    else if (category == 23) {
+        lighthouseIcon.options.iconSize = getIconSize();
         return lighthouseIcon;
-    } else if (category == 35) {
+    }
+    
+    else if (category == 35) {
+        beachAccessIcon.options.iconSize = getIconSize();
         return beachAccessIcon;
-    } else {
+    }
+    
+    else {
+        scenicViewpointIcon.options.iconSize = getIconSize();
         return scenicViewpointIcon; // default option if there is no valid category, should not be used
     }
+}
+
+
+// Function to get the icon size based on the zoom level
+function getIconSize() {
+    
+    // Set the default icon size (height and width) in pixels
+    var iconSize = [21, 22];
+
+    // If the map is zoomed out to the extent of the refuge, set a smaller icon size
+    if (map.getZoom() < 13) {
+        iconSize = [10, 11];
+    }
+
+    // Return the icon size
+    return iconSize;
 }
 
 
@@ -1104,8 +1192,8 @@ function filterPointsOfInterest(selectedTheme) {
         loadVisitorServiceFeatures(sqlQueryNearby);        
     }
     
-    // If the screen width is less than 800 pixels
-    if (screen.width < 800) {
+    // If the screen width is less than or equal to 768 pixels
+    if (screen.width <= 768) {
         
         // Collapse the sidebar
         sidebar.close();        
@@ -1226,8 +1314,8 @@ function startEdits() {
     map.addControl(drawControl);
     controlOnMap = true;
     
-    // If the screen width is less than 800 pixels
-    if (screen.width < 800) {
+    // If the screen width is less than or equal to 768 pixels
+    if (screen.width <= 768) {
         
         // Collapse the sidebar
         sidebar.close();        
@@ -1437,8 +1525,8 @@ function refreshLayer() {
     // Reload the wildlife observations layer with the new point
     loadWildlifeObservations();
     
-    // If the screen width is less than 800 pixels
-    if (screen.width < 800) {
+    // If the screen width is less than or equal to 768 pixels
+    if (screen.width <= 768) {
         
         // Collapse the sidebar
         sidebar.close();        
