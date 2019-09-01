@@ -6,4 +6,6 @@ The interactive visitor map is focused on the themes of general tourism and ecot
 
 The mobile-friendly layout is compatible with any desktop computer, tablet, or phone with internet access.
 
+Note: Submitting data requires the use of a CARTO API key, which is secured behind a proxy and needs to be run on a PHP server. The application can be run by installing <a href="https://www.apachefriends.org/index.html">XAMPP</a>, starting a local PHP server, and navigating to http://localhost/ding-darling-nwr/index.html.
+
 View a demo of the application at <a href="https://www.youtube.com/watch?v=JK6WJg-0xEg" target="_blank">https://www.youtube.com/watch?v=JK6WJg-0xEg</a>.

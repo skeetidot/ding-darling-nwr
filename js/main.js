@@ -1461,6 +1461,10 @@ function setData() {
 
         // Submit the SQL statement to the PHP proxy, so it can be added to the database without exposing the CARTO API key
         submitToProxy(pURL);
+        
+        // Format:
+        // https://{username}.carto.com/api/v2/sql?q=INSERT INTO test_table (column_name, column_name_2, the_geom) VALUES ('this is a string', 11, ST_SetSRID(ST_Point(-110, 43),4326))&api_key={api_key}
+                
         //console.log("Feature has been submitted to the proxy");
     });
 
