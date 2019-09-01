@@ -520,8 +520,11 @@ map.on('locationerror', locationNotFound);
 // When the user zooms in or out
 map.on('zoom', function (e) {
     
-    // Reload the points of interest based on the updated icon size
-    loadVisitorServiceFeatures(sqlQueryFilteredVisitorServiceFeatures);
+    // Create a variable to store the value of the selected theme
+    var selectedTheme = $("#filterDropdown option:selected").val();
+    
+    // Update the points of interest based on the selected theme and updated icon size
+    filterPointsOfInterest(selectedTheme);
     
 });
 
