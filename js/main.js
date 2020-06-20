@@ -1,11 +1,13 @@
 // Define Global Variables
 
 // Wikimedia basemap tiles
-var Wikimedia = L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png', {
-    attribution: '<a href="https://wikimediafoundation.org/wiki/Maps_Terms_of_Use">Wikimedia</a>',
-    minZoom: 1,
-    maxZoom: 19
-});
+//var Wikimedia = L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png', {
+//    attribution: '<a href="https://wikimediafoundation.org/wiki/Maps_Terms_of_Use">Wikimedia</a>',
+//    minZoom: 1,
+//    maxZoom: 19
+//});
+
+var Esri_VectorNavigation = L.esri.Vector.basemap('Navigation');
 
 var Esri_WorldImagery = L.tileLayer('https://clarity.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
     attribution: '<a href="http://www.arcgis.com/home/item.html?id=da10cf4ba254469caf8016cd66369157">Esri</a>',
@@ -268,7 +270,7 @@ var sqlQueryFilteredVisitorServiceFeatures = sqlQueryVisitorServiceFeatures;
 // Set the basemap for the layer list
 // If only one basemap is included, it is not part of the layer list
 var baseMaps = {
-    "Streets": Wikimedia,
+    "Streets": Esri_VectorNavigation,
     "Imagery": Esri_WorldImagery
 };
 
@@ -423,7 +425,6 @@ layerList = L.control.layers(baseMaps, overlays, {
     // hideSingleBase: true // Hide the base layers section when there is only one layer
 }).addTo(map);
 
-
 // Create Leaflet Draw Control for the draw tools and toolbox
 var drawControl = new L.Control.Draw({
 
@@ -454,7 +455,7 @@ var drawnItems = new L.FeatureGroup();
 
 
 // Add the basemap
-map.addLayer(Wikimedia);
+map.addLayer(Esri_VectorNavigation);
 
 
 // Build the sidebar and add it to the map

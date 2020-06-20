@@ -33,9 +33,12 @@
 
     <!-- LEAFLET DRAW STYLESHEET -->
     <link rel="stylesheet" href="lib/leaflet-draw/leaflet.draw.css" />
-    
+
     <!-- JQUERY UI STYLESHEET -->
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    
+    <!-- MAPBOX GL STYLESHEET -->
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.0/mapbox-gl.css' rel='stylesheet' />    
 
     <!-- CUSTOM STYLESHEET -->
     <link rel="stylesheet" href="css/style.css">
@@ -67,7 +70,7 @@
 
     <!-- LEAFLET AWESOME MARKERS -->
     <script src="lib/leaflet.awesome-markers-2.0/dist/leaflet.awesome-markers.js"></script>
-    
+
     <!-- LEAFLET MULTI STYLE LAYER -->
     <script src="lib/leaflet-multi-style-master/multi-style-layer.js"></script>
 
@@ -76,6 +79,16 @@
 
     <!-- JQUERY UI -->
     <script type="text/javascript" src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+
+    <!-- ESRI LEAFLET -->
+    <script src="https://unpkg.com/esri-leaflet@2.4.1/dist/esri-leaflet.js" integrity="sha512-xY2smLIHKirD03vHKDJ2u4pqeHA7OQZZ27EjtqmuhDguxiUvdsOuXMwkg16PQrm9cgTmXtoxA6kwr8KBy3cdcw==" crossorigin=""></script>
+
+    <!-- MAPBOX GL -->
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.0/mapbox-gl.js'></script>
+
+    <!-- ESRI LEAFLET VECTOR TILES -->
+    <script src="https://unpkg.com/mapbox-gl-leaflet/leaflet-mapbox-gl.js"></script>
+    <script src="https://unpkg.com/esri-leaflet-vector@2.0.2/dist/esri-leaflet-vector.js" integrity="sha512-keaVwrBxpBNq1XF5XEUvQ8NtoBbGPs/gKJJ3tp1qiudO3mTk9YEa6/uPpxX/G2HIjFrquj/xGg+p/c7nDp0wUg==" crossorigin=""></script>
 
 
 </head>
@@ -151,7 +164,7 @@
                     <span class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
                 <p>Submit your own wildlife observations</p>
-                
+
                 <!-- Since the CARTO API key has to be secured, the application only runs locally, accessed by starting a local PHP server through XAMPP and going to //http://localhost/ding-darling-nwr/index.html -->
                 <!-- See http://duspviz.mit.edu/web-map-workshop/cartodb-data-collection/ for more information -->
                 <p>Note: Submitting data requires the use of a CARTO API key, which is secured behind a proxy and requires server access. This portion of the application needs to run locally through XAMPP. See a demo <a href="https://www.youtube.com/watch?v=JK6WJg-0xEg">here</a>.</p>
@@ -277,7 +290,7 @@
                         <img src="icons/ebird_hotspots.png" alt="eBird Hotspots">
                         <span class="legendText"></span>
                     </div>
-                    
+
                     <div id="fieldLabel">Wildlife Observations</div>
                     <div id="legendItem">
                         <img src="icons/birds.png" alt="Birds">
@@ -302,12 +315,12 @@
                     <div id="legendItem">
                         <img src="icons/insects_arachnids.png" alt="Insects and Arachnids">
                         <span class="legendText">Insects and Arachnids</span>
-                    </div>  
+                    </div>
 
                     <div id="legendItem">
                         <img src="icons/crustaceans.png" alt="Crustaceans">
                         <span class="legendText">Crustaceans</span>
-                    </div>                    
+                    </div>
                 </div>
 
             </div>
